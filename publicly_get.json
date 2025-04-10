@@ -1,0 +1,205 @@
+{
+    "siteId": 1,
+    "siteVersionId": 1,
+    "ownerId": 1,
+    "ownerUsername": "user",
+    "siteName": "Công viên nước Đà Nẵng Mikazuki",
+    "lat": 16.092438,
+    "lng": 108.143831,
+    "resolvedAddress": "Khu du lịch Xuân Thiều, đường Nguyễn Tất Thành, phường Hòa Hiệp Nam, quận Liên Chiểu, TP. Đà Nẵng",
+    "website": "https://www.mikazukiwaterpark.com/",
+    "createdAt": "2024-10-28T10:18:20",
+    "siteType": {
+        "id": 3,
+        "name": "Khu vui chơi nước trong nhà",
+        "amenity": true,
+        "attraction": true
+    },
+    "phoneNumbers": [
+        "+84879347200",
+        "+842363774555"
+    ],
+    "groupedServices": [
+        {
+            "serviceGroup": {
+                "id": 2,
+                "serviceGroupName": "Tiện nghi trong phòng"
+            },
+            "services": [
+                {
+                    "id": 21,
+                    "serviceName": "Màn che ánh sáng"
+                },
+                {
+                    "id": 22,
+                    "serviceName": "Phòng cách âm"
+                },
+                {
+                    "id": 23,
+                    "serviceName": "Điều hòa nhiệt độ"
+                },
+                {
+                    "id": 24,
+                    "serviceName": "Máy pha cà phê / trà"
+                },
+                {
+                    "id": 25,
+                    "serviceName": "Tủ lạnh"
+                },
+                {
+                    "id": 26,
+                    "serviceName": "Dọn phòng"
+                },
+                {
+                    "id": 27,
+                    "serviceName": "Ban công riêng"
+                },
+                {
+                    "id": 28,
+                    "serviceName": "Phòng tắm riêng"
+                },
+                {
+                    "id": 29,
+                    "serviceName": "Nước đóng chai miễn phí"
+                },
+                {
+                    "id": 30,
+                    "serviceName": "Tivi màn hình phẳng"
+                },
+                {
+                    "id": 31,
+                    "serviceName": "Máy sấy tóc"
+                },
+                {
+                    "id": 32,
+                    "serviceName": "Bồn tắm / vòi sen"
+                },
+                {
+                    "id": 33,
+                    "serviceName": "Máy sấy tóc"
+                },
+                {
+                    "id": 34,
+                    "serviceName": "Bàn làm việc"
+                },
+                {
+                    "id": 35,
+                    "serviceName": "Vòi xịt vệ sinh"
+                }
+            ]
+        },
+        {
+            "serviceGroup": {
+                "id": 3,
+                "serviceGroupName": "Loại phòng"
+            },
+            "services": [
+                {
+                    "id": 36,
+                    "serviceName": "Phòng ngắm cảnh biển"
+                },
+                {
+                    "id": 37,
+                    "serviceName": "Phòng không hút thuốc"
+                },
+                {
+                    "id": 38,
+                    "serviceName": "Phòng Suite"
+                },
+                {
+                    "id": 39,
+                    "serviceName": "Phòng cho gia đình"
+                }
+            ]
+        },
+        {
+            "serviceGroup": {
+                "id": 1,
+                "serviceGroupName": "Tiện nghi"
+            },
+            "services": [
+                {
+                    "id": 1,
+                    "serviceName": "Bãi đỗ xe miễn phí"
+                },
+                {
+                    "id": 2,
+                    "serviceName": "Wi-Fi tốc độ - miễn phí"
+                },
+                {
+                    "id": 3,
+                    "serviceName": "Trung tâm thể dục thẩm mỹ"
+                },
+                {
+                    "id": 4,
+                    "serviceName": "Bể bơi"
+                },
+                {
+                    "id": 5,
+                    "serviceName": "Quầy bar / Sảnh chờ"
+                },
+                {
+                    "id": 6,
+                    "serviceName": "Bãi biển"
+                },
+                {
+                    "id": 7,
+                    "serviceName": "Sân chơi cho trẻ em"
+                },
+                {
+                    "id": 8,
+                    "serviceName": "Massage"
+                },
+                {
+                    "id": 9,
+                    "serviceName": "ATM trong khuôn viên"
+                },
+                {
+                    "id": 10,
+                    "serviceName": "Giặt là"
+                },
+                {
+                    "id": 11,
+                    "serviceName": "Tiếp tân 24 giờ"
+                },
+                {
+                    "id": 12,
+                    "serviceName": "Có phục vụ bữa sáng"
+                },
+                {
+                    "id": 13,
+                    "serviceName": "Đồ uống chào mừng miễn phí"
+                },
+                {
+                    "id": 14,
+                    "serviceName": "Cà phê pha chế miễn phí"
+                },
+                {
+                    "id": 15,
+                    "serviceName": "Cà phê hoòa tan miễn phí"
+                },
+                {
+                    "id": 16,
+                    "serviceName": "Đường trượt nước"
+                },
+                {
+                    "id": 17,
+                    "serviceName": "Nhà hàng trong nhà"
+                },
+                {
+                    "id": 18,
+                    "serviceName": "Bể bơi vô cực"
+                },
+                {
+                    "id": 19,
+                    "serviceName": "Bể bơi ngoài trời"
+                },
+                {
+                    "id": 20,
+                    "serviceName": "Xông hơi"
+                }
+            ]
+        }
+    ],
+    "openingTimes": []
+}
