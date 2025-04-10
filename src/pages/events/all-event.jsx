@@ -54,32 +54,7 @@ const AllEvents = () => {
         dispatch(getEventName(eventName));
         navigateTo(URLS.ALL_EVENTS_REGISTRATION);
     };   
-    // useEffect(() => {
-    //     const script = document.createElement("script");
-    //     script.src = "https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.5/libs/oversea/index.js";
-    //     script.async = true;
-    //     script.onload = () => {
-    //         new CozeWebSDK.WebChatClient({
-    //             config: {
-    //                 bot_id: "7478699799987142673",
-    //             },
-    //             componentProps: {
-    //                 title: "Coze",
-    //             },
-    //             auth: {
-    //                 type: "token",
-    //                 token: "pat_gypby3vCZTHp8faYa6Pz0kjeHyIRl6iZiVkcegnENB12jCVq1wox3C6cr860usuN",
-    //                 onRefreshToken: function () {
-    //                     return "pat_gypby3vCZTHp8faYa6Pz0kjeHyIRl6iZiVkcegnENB12jCVq1wox3C6cr860usuN";
-    //                 },
-    //             },
-    //         });
-    //     };
-    //     document.body.appendChild(script);
-    //     return () => {
-    //         document.body.removeChild(script);
-    //     };
-    // }, []);
+  
     return ( 
         <>
         <div className="flex flex-wrap justify-between items-center mb-8">
