@@ -43,7 +43,7 @@
 
 
 import { useState } from "react";
-import { useGetFalcutyCriteriaQuery, useGetSchoolCriteriaQuery,  useGetFalcutyCriteriaInSemesterQuery,
+import {  useGetFalcutyCriteriaInSemesterQuery,
                 useGetSchoolCriteriaInSemesterQuery } from "@/api/rtkQuery/featureApi/criteriaApiSlice";
 import StudentCriteriasCard from "@/components/cards/excellent-students/student-criterias";
 import { Separator } from "@/components/ui/separator";

@@ -26,7 +26,9 @@ function HomePage( { children } ) {
 
                 {
                     (path === URLS.EXCELLENT_STUDENTS ||
-                    path === URLS.STUDENT_CRITERIA )
+                    path === URLS.STUDENT_CRITERIA ||
+                    path === URLS.EXCELLENT_STUDENTS_NAV ||
+                    path === URLS.EXCELLENT_LCD)
                     && <ExcellentStudentNavbar />
                 }
                 {children}

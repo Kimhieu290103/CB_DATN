@@ -12,8 +12,12 @@ const ExcellentStudentNavbar = () => {
                 Tiêu chí sinh viên 5 tốt
             </EventDetailNavbarItem>
             
-            <EventDetailNavbarItem >
+            <EventDetailNavbarItem  navigateTo={URLS.EXCELLENT_STUDENTS_NAV}>
                Danh sách sinh viên 5 tốt
+            </EventDetailNavbarItem>
+
+            <EventDetailNavbarItem  navigateTo={URLS.EXCELLENT_LCD}>
+               Danh sách liên chi đoàn hoạt động tốt
             </EventDetailNavbarItem>
         </ul>
      );

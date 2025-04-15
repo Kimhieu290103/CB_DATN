@@ -11,13 +11,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Dialog,  DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 import { useGetCommunityScoreQuery } from "@/api/rtkQuery/featureApi/scoreApiSlice";
 
 

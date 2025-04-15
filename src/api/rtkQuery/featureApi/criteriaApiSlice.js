@@ -36,6 +36,15 @@ export const criteriaApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['FalcutyCriteria'],
         }),
+        // Thêm vào trong `endpoints: (builder) => ({ ... })`
+        getCompletedStudentCriteria: builder.query({
+            query: (semesterId) => `/api/v1/student_criteria/completed?semesterId=${semesterId}`,
+        }),
+            // Thêm vào trong `endpoints: (builder) => ({ ... })`
+        getCompletedLcdCriteria: builder.query({
+            query: (semesterId) => `/api/v1/lcd_criteria/completed?semesterId=${semesterId}`,
+        }),
+
     }),
 });
 
@@ -46,4 +55,6 @@ export const { useGetFalcutyCriteriaQuery,
                 useGetSchoolCriteriaInSemesterQuery,
                 useRemoveSchoolCriteriaMutation,
                 useRemoveFalcutyCriteriaMutation,
+                useGetCompletedStudentCriteriaQuery,
+                useGetCompletedLcdCriteriaQuery 
             } = criteriaApiSlice;

@@ -25,7 +25,6 @@ import { useDispatch } from 'react-redux';
 import { getEventID, getEventName } from "@/redux/reducer/events.reducer";
 import { eventStatus } from "@/lib/utils";
 import PaginationItem from "@/components/items/pagination/pagination";
-import {  useEffect } from "react";
 const AllEvents = () => {
     const dispatch = useDispatch();
     const navigateTo = useNavigate();

@@ -12,7 +12,10 @@ const URLS = {
     "COMMUNITY_SCORE": '/community-score',
     "EXCELLENT_STUDENTS": '/excellent-students',
     "STUDENT_CRITERIA": '/excellent-students/student-criteria',
-    "ACCOUNT_MANAGEMENT" : '/account-management'
+    "ACCOUNT_MANAGEMENT" : '/account-management',
+    "EXCELLENT_STUDENTS_NAV" : '/excellent-students_nav',
+    "EXCELLENT_LCD": '/excellent-lcd'
+
 }
 
 export default URLS;

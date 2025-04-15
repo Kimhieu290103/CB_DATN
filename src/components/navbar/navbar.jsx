@@ -40,7 +40,11 @@ const Navbar = () => {
                 path === URLS.ALL_EVENTS_REGISTRATION ? 'Tất cả sự kiện' :
                 path === URLS.EXTERNAL_ACTIVITIES ? 'Hoạt động khác' :
                 path === URLS.COMMUNITY_SCORE ? 'Quản lý điểm PVCĐ' :
-                path === URLS.EXCELLENT_STUDENTS ? 'Sinh viên 5 tốt' : ''}
+                path === URLS.EXCELLENT_STUDENTS ? 'Sinh viên 5 tốt' : 
+                path === URLS.EXCELLENT_STUDENTS_NAV ? 'Sinh viên 5 tốt' :
+                path === URLS.STUDENT_CRITERIA ? 'Tiêu chí hoạt động và sinh viên 5 tốt' :
+                path === URLS.EXCELLENT_LCD ? 'Liên chi đoàn tốt'
+                 :''}
             </h1>
 
             <DropdownMenu>

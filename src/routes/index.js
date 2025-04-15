@@ -17,6 +17,8 @@ import ExcellentStudentsList from '@/pages/excellent-students/excellent-students
 import StudentCriterias from '@/pages/excellent-students/student-criterias'
 import AllEvents from '@/pages/events/all-event'
 import AccountManager from '@/pages/account-manager/account'
+import ExcellentStudentsListNavNav from '@/pages/excellent-students/excellent-students-list-nav'
+import ExcellentLcdList from '@/pages/excellent-students/excellent-lcd-list'
 const publicRoutes = [
     {path: '/', element: Login, Layout: LoginLayout},
     {path: '/not-authorized', element: NotAuthorized, Layout: LoginLayout},
@@ -38,6 +40,8 @@ const privateRoutes = [
     {path: URLS.EXCELLENT_STUDENTS, element: ExcellentStudentsList, roles: ['HSV', 'BTV']},
     {path: URLS.STUDENT_CRITERIA, element: StudentCriterias, roles: ['HSV', 'BTV']},
     {path: URLS.ACCOUNT_MANAGEMENT, element: AccountManager, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
+    {path: URLS.EXCELLENT_STUDENTS_NAV, element: ExcellentStudentsListNavNav, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
+    {path: URLS.EXCELLENT_LCD, element: ExcellentLcdList, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
 ]
 
 export { publicRoutes, privateRoutes }
