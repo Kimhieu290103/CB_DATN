@@ -53,7 +53,7 @@ const ExternalEvent = () => {
                 <TableBody>
                     {externalEvents.map((event, index) => (
                         <TableRow key={index}>
-                            <TableCell className="font-medium text-center hidden sm:table-cell">102200007</TableCell>
+                            <TableCell className="font-medium text-center hidden sm:table-cell">{event?.studentId}</TableCell>
                             <TableCell>{event?.studentName}</TableCell>
                             <TableCell className="hidden sm:table-cell">{event?.clazz}</TableCell>
                             <TableCell className="hidden sm:table-cell">{event?.name}</TableCell>

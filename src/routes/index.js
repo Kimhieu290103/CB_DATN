@@ -19,6 +19,10 @@ import AllEvents from '@/pages/events/all-event'
 import AccountManager from '@/pages/account-manager/account'
 import ExcellentStudentsListNavNav from '@/pages/excellent-students/excellent-students-list-nav'
 import ExcellentLcdList from '@/pages/excellent-students/excellent-lcd-list'
+import AccountStudentList from '@/pages/account-manager/account-sv'
+import AccountLcdList from '@/pages/account-manager/account-lcd'
+import AccountAdminList from '@/pages/account-manager/account-admin'
+import ClassManagement from '@/pages/class-manager/class-manager'
 const publicRoutes = [
     {path: '/', element: Login, Layout: LoginLayout},
     {path: '/not-authorized', element: NotAuthorized, Layout: LoginLayout},
@@ -26,9 +30,9 @@ const publicRoutes = [
 ]
 
 const privateRoutes = [
-    {path: URLS.ALL_EVENTS, element: AllEvents, roles: ['HSV', 'CTSV', 'BTV']},
-    {path: URLS.ALL_EVENTS_DETAILS, element: EventDetail, roles: ['HSV', 'CTSV', 'BTV']},
-    {path: URLS.ALL_EVENTS_REGISTRATION, element: EventRegistration, roles: ['HSV', 'CTSV', 'BTV']},
+    {path: URLS.ALL_EVENTS, element: AllEvents, roles: ['HSV', 'CTSV', 'BTV','LCD']},
+    {path: URLS.ALL_EVENTS_DETAILS, element: EventDetail, roles: ['HSV', 'CTSV', 'BTV','LCD']},
+    {path: URLS.ALL_EVENTS_REGISTRATION, element: EventRegistration, roles: ['HSV', 'CTSV', 'BTV','LCD']},
     {path: URLS.MANAGE_EVENTS, element: EventsList},
     {path: URLS.EVENT_DETAILS, element: EventDetail},
     {path: URLS.EVENT_REGISTRATION, element: EventRegistration},
@@ -36,12 +40,16 @@ const privateRoutes = [
     {path: URLS.NEW_EVENT, element: NewEvent},
     {path: URLS.EDIT_EVENT, element: EditEvent},
     {path: URLS.EXTERNAL_ACTIVITIES, element: ExternalEvent, roles: ['HSV', 'CTSV', 'BTV']},
-    {path: URLS.COMMUNITY_SCORE, element: CommunityScoreList},
+    {path: URLS.COMMUNITY_SCORE, element: CommunityScoreList, roles: ['HSV', 'CTSV', 'BTV']},
     {path: URLS.EXCELLENT_STUDENTS, element: ExcellentStudentsList, roles: ['HSV', 'BTV']},
     {path: URLS.STUDENT_CRITERIA, element: StudentCriterias, roles: ['HSV', 'BTV']},
     {path: URLS.ACCOUNT_MANAGEMENT, element: AccountManager, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
     {path: URLS.EXCELLENT_STUDENTS_NAV, element: ExcellentStudentsListNavNav, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
     {path: URLS.EXCELLENT_LCD, element: ExcellentLcdList, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
+    {path: URLS.ACCOUNT_SV, element: AccountStudentList, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
+    {path: URLS.ACCOUNT_LCD, element: AccountLcdList, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
+    {path: URLS.ACCOUNT_ADMIN, element: AccountAdminList, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
+    {path: URLS.CLASS_MANAGEMENT, element: ClassManagement, roles: ['HSV', 'BTV', 'BTV', 'CTSV']},
 ]
 
 export { publicRoutes, privateRoutes }

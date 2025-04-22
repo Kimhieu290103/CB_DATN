@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster"
 import EventDetailNavbar from "@/components/navbar/event-details-navbar/event-detail-navbar";
 import URLS from "@/routes/urls";
 import ExcellentStudentNavbar from "@/components/navbar/excellent-students-navbar/excellent-students--navbar";
-
+import AccountmanagerNavbar from "@/components/navbar/account-manager/account-manager-navbar";
 function HomePage( { children } ) {
     const path = window.location.pathname;
 
@@ -30,6 +30,15 @@ function HomePage( { children } ) {
                     path === URLS.EXCELLENT_STUDENTS_NAV ||
                     path === URLS.EXCELLENT_LCD)
                     && <ExcellentStudentNavbar />
+                }
+
+{
+                    (path === URLS.ACCOUNT_MANAGEMENT||
+                    path === URLS.ACCOUNT_SV ||
+                    path === URLS.ACCOUNT_LCD ||
+                    path === URLS.ACCOUNT_ADMIN
+                ) 
+                    && < AccountmanagerNavbar/>
                 }
                 {children}
             </div>

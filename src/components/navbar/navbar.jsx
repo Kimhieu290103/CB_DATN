@@ -43,7 +43,12 @@ const Navbar = () => {
                 path === URLS.EXCELLENT_STUDENTS ? 'Sinh viên 5 tốt' : 
                 path === URLS.EXCELLENT_STUDENTS_NAV ? 'Sinh viên 5 tốt' :
                 path === URLS.STUDENT_CRITERIA ? 'Tiêu chí hoạt động và sinh viên 5 tốt' :
-                path === URLS.EXCELLENT_LCD ? 'Liên chi đoàn tốt'
+                path === URLS.EXCELLENT_LCD ? 'Liên chi đoàn tốt':
+                path === URLS.ACCOUNT_MANAGEMENT ? 'Quản lí tài khoản':
+                path === URLS.ACCOUNT_LCD ? 'Danh sách tài khoản liên chi đoàn':
+                path === URLS.ACCOUNT_SV ? 'Danh sách tài khoản sinh viên':
+                path === URLS.ACCOUNT_ADMIN ? 'Danh sách tài khoản hội đồng':
+                path === URLS.CLASS_MANAGEMENT ? 'Danh sách lớp học'
                  :''}
             </h1>
 

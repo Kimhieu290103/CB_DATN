@@ -15,6 +15,9 @@ export const otherApiSlice = apiSlice.injectEndpoints({
                 body: params,
             }),
         }),
+        getAllClasses: builder.query({
+            query: () => "/api/v1/class/all",
+          }),
     }),
 });
 
@@ -22,4 +25,5 @@ export const {
     useGetDepartmentQuery,
     useGetCoursesQuery,
     useGetClassesMutation,
+    useGetAllClassesQuery
  } = otherApiSlice;

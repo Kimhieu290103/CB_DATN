@@ -13,8 +13,12 @@ const URLS = {
     "EXCELLENT_STUDENTS": '/excellent-students',
     "STUDENT_CRITERIA": '/excellent-students/student-criteria',
     "ACCOUNT_MANAGEMENT" : '/account-management',
-    "EXCELLENT_STUDENTS_NAV" : '/excellent-students_nav',
-    "EXCELLENT_LCD": '/excellent-lcd'
+    "EXCELLENT_STUDENTS_NAV" : '/excellent-students/excellent-students_nav',
+    "EXCELLENT_LCD": '/excellent-students/excellent-lcd',
+    "ACCOUNT_SV" :'/account-management/account-sv',
+    "ACCOUNT_LCD":'/account-management/account-lcd',
+    "ACCOUNT_ADMIN":'/account-management/account-admin',
+    "CLASS_MANAGEMENT":"/class-management"
 
 }
 

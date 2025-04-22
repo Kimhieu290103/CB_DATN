@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const SideBar = () => {
     const userRole = useSelector(state => state.auth.login.role);
-    if (userRole === 'STUDENT') return null;
+    if (userRole === 'SV') return null;
 
     return ( 
         <div className="w-1/5 md:p-4 bg-slate-50 hidden lg:block md:fixed md:h-full md:overflow-y-auto">
@@ -29,29 +29,29 @@ const SideBar = () => {
                 
                 <SideBarItem navigateTo={URLS.MANAGE_EVENTS}>
                     <div className="flex items-center">
-                        <span className="material-symbols-outlined mr-1">event_list</span>
+                        <span className="material-symbols-outlined mr-1">event_note</span>
                         <span className='text-lg'>Quản lý sự kiện</span>
                     </div>
                 </SideBarItem>
-
-                {userRole !== 'LCD' && (
-                    <div>
-                        <SideBarItem navigateTo={URLS.ALL_EVENTS}>
+                <SideBarItem navigateTo={URLS.ALL_EVENTS}>
                             <div className="flex items-center">
                                 <span className="material-symbols-outlined mr-1">receipt_long</span>
                                 <span className='text-lg'>Tất cả sự kiện</span>
                             </div>
                         </SideBarItem>
+                {userRole !== 'LCD' && (
+                    <div>
+                  
                         <SideBarItem navigateTo={URLS.EXTERNAL_ACTIVITIES}>
                             <div className="flex items-center">
-                                <span className="material-symbols-outlined mr-1">diversity_2</span>
+                                <span className="material-symbols-outlined mr-1">public</span>
                                 <span className='text-lg'>Hoạt động khác</span>
                             </div>
                         </SideBarItem>
 
                         <SideBarItem navigateTo={URLS.COMMUNITY_SCORE}>
                             <div className="flex items-center">
-                                <span className="material-symbols-outlined mr-1">format_list_numbered_rtl</span>
+                                <span className="material-symbols-outlined mr-1">assignment_turned_in</span>
                                 <span className='text-lg'>Quản lý điểm PVCĐ</span>
                             </div>
                         </SideBarItem>
@@ -65,8 +65,14 @@ const SideBar = () => {
                               
                         <SideBarItem navigateTo={URLS.ACCOUNT_MANAGEMENT}>
                             <div className="flex items-center">
-                                <span className="material-symbols-outlined mr-1">social_leaderboard</span>
+                                <span className="material-symbols-outlined mr-1">manage_accounts</span>
                                 <span className='text-lg'>Quản lí tài khoản</span>
+                            </div>
+                        </SideBarItem>
+                        <SideBarItem navigateTo={URLS.CLASS_MANAGEMENT}>
+                            <div className="flex items-center">
+                                <span className="material-symbols-outlined mr-1">school</span>
+                                <span className='text-lg'>Quản lí lớp học</span>
                             </div>
                         </SideBarItem>
                     </div>

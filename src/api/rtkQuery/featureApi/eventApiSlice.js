@@ -102,6 +102,13 @@ export const eventApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['EventRegistration'],
         }),
         // --------------------------------------------
+
+        // ----------------------------- New endpoint -----------------------------
+      
+
+        //......................................................
+
+
     }),
 });
 
