@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import { useGetAllLcdQuery } from "@/api/rtkQuery/featureApi/accountApiSlice";
+import { useGetAllLcdQuery,useRegisterStudentMutation } from "@/api/rtkQuery/featureApi/accountApiSlice";
 import PaginationItem from "@/components/items/pagination/pagination";
 
 export default function AccountListLcd() {
@@ -20,6 +20,7 @@ export default function AccountListLcd() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
+  
   const { data: studentData, isLoading, isError } = useGetAllLcdQuery(
     { page, limit: rowsPerPage },
     { refetchOnMountOrArgChange: true }
@@ -33,29 +34,34 @@ export default function AccountListLcd() {
   const [formData, setFormData] = useState({
     fullname: '',
     phone_number: '',
-    student_id: '',
     address: '',
     date_of_birth: '',
     email: '',
+    student_id: '',
     username: '',
     password: '',
     retype_password: '',
-    class_id: '',
-    role_id: 'SV',
+    role_id: 'LCD',
   });
 
 
-
+  const [registerStudent] = useRegisterStudentMutation();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
 
 
-  const handleSubmit = () => {
-    console.log("Submit form", formData);
+  const handleSubmit = async () => {
+    try {
+      const result = await registerStudent(formData).unwrap();
+      console.log("Đăng ký thành công:", result);
+      setOpenAdd(false); // đóng dialog nếu thành công
+    } catch (error) {
+      console.error("Đăng ký thất bại:", error);
+    }
   };
-
+  
 
   const handleFilterResults = (filters) => {
     setFilters(filters);
@@ -164,32 +170,80 @@ export default function AccountListLcd() {
         </DialogContent>
       </Dialog>
       <Dialog open={openAdd} onOpenChange={setOpenAdd}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Thêm tài khoản sinh viên</DialogTitle>
-          </DialogHeader>
+  <DialogContent className="max-w-2xl">
+    <DialogHeader>
+      <DialogTitle>Thêm tài khoản sinh viên</DialogTitle>
+    </DialogHeader>
 
-          <div className="grid gap-4">
-            <div className="grid grid-cols-2 gap-4">
-              <input name="fullname" onChange={handleChange} value={formData.fullname} placeholder="Họ và tên" className="input input-bordered" />
-              <input name="student_id" onChange={handleChange} value={formData.student_id} placeholder="MSSV" className="input input-bordered" />
-              <input name="phone_number" onChange={handleChange} value={formData.phone_number} placeholder="Số điện thoại" className="input input-bordered" />
-              <input name="email" onChange={handleChange} value={formData.email} placeholder="Email" className="input input-bordered" />
-              <input name="address" onChange={handleChange} value={formData.address} placeholder="Địa chỉ" className="input input-bordered" />
-              <input type="date" name="date_of_birth" onChange={handleChange} value={formData.date_of_birth} className="input input-bordered" />
-              <input name="username" onChange={handleChange} value={formData.username} placeholder="Tên đăng nhập" className="input input-bordered" />
-              <input type="password" name="password" onChange={handleChange} value={formData.password} placeholder="Mật khẩu" className="input input-bordered" />
-              <input type="password" name="retype_password" onChange={handleChange} value={formData.retype_password} placeholder="Nhập lại mật khẩu" className="input input-bordered" />
-              <input name="class_id" onChange={handleChange} value={formData.class_id} placeholder="Lớp (VD: Dien21)" className="input input-bordered" />
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button onClick={handleSubmit}>Lưu</Button>
-            </div>
+    <div className="grid gap-4">
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          name="fullname"
+          onChange={handleChange}
+          value={formData.fullname}
+          placeholder="Họ và tên"
+          className="input input-bordered"
+        />
+        <input
+          name="phone_number"
+          onChange={handleChange}
+          value={formData.phone_number}
+          placeholder="Số điện thoại"
+          className="input input-bordered"
+        />
+        <input
+          name="email"
+          onChange={handleChange}
+          value={formData.email}
+          placeholder="Email"
+          className="input input-bordered"
+        />
+        <input
+          name="address"
+          onChange={handleChange}
+          value={formData.address}
+          placeholder="Địa chỉ"
+          className="input input-bordered"
+        />
+        <input
+          type="date"
+          name="date_of_birth"
+          onChange={handleChange}
+          value={formData.date_of_birth}
+          className="input input-bordered"
+        />
+        <input
+          name="username"
+          onChange={handleChange}
+          value={formData.username}
+          placeholder="Tên đăng nhập"
+          className="input input-bordered"
+        />
+        <input
+          type="password"
+          name="password"
+          onChange={handleChange}
+          value={formData.password}
+          placeholder="Mật khẩu"
+          className="input input-bordered"
+        />
+        <input
+          type="password"
+          name="retype_password"
+          onChange={handleChange}
+          value={formData.retype_password}
+          placeholder="Nhập lại mật khẩu"
+          className="input input-bordered"
+        />
+      </div>
 
+      <div className="flex justify-end gap-2">
+        <Button onClick={handleSubmit}>Lưu</Button>
+      </div>
+    </div>
+  </DialogContent>
+</Dialog>
 
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -11,7 +11,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useGetAllClassesQuery } from "@/api/rtkQuery/featureApi/otherApiSlice";
-import { useGetAllStudentsQuery, useRegisterStudentMutation } from "@/api/rtkQuery/featureApi/accountApiSlice";
+import {
+  useGetAllStudentsQuery,
+  useRegisterStudentMutation,
+  useBulkRegisterStudentsMutation,
+  useSearchStudentsQuery
+} from "@/api/rtkQuery/featureApi/accountApiSlice";
 import PaginationItem from "@/components/items/pagination/pagination";
 
 export default function AccountListStudent() {
@@ -28,6 +33,7 @@ export default function AccountListStudent() {
   const handleFilterResults = (filters) => {
     setFilters(filters);
   };
+  const [bulkRegisterStudents] = useBulkRegisterStudentsMutation();
   const [createStudent, { isLoading: isCreating }] = useRegisterStudentMutation();
   const [openAdd, setOpenAdd] = useState(false);
   const { data: studentData, isLoading, isError } = useGetAllStudentsQuery(
@@ -95,10 +101,36 @@ export default function AccountListStudent() {
     }
   };
 
-  const handleExcelSubmit = () => {
-    console.log("Upload Excel", excelFile);
-  };
 
+  const handleExcelSubmit = async () => {
+    if (!excelFile) {
+      alert("Vui lòng chọn file Excel.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", excelFile);
+
+    try {
+      await bulkRegisterStudents(formData).unwrap();
+      alert("Đăng ký sinh viên hàng loạt thành công!");
+      setExcelFile(null);
+      setOpenAdd(false);
+    } catch (error) {
+      console.error("Lỗi khi upload file Excel:", error);
+      alert("Đã xảy ra lỗi khi upload file Excel.");
+    }
+  };
+  // Trong component
+  const [searchTerm, setSearchTerm] = useState('');
+  const { data: searchResults, isLoading: isSearchLoading, isError: isSearchError } = useSearchStudentsQuery(
+    { search: searchTerm, page, size: rowsPerPage },
+    { skip: !searchTerm } // Chỉ gọi API khi có từ khóa tìm kiếm
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
   return (
     <div className="mx-auto py-4 px-0">
       <h1 className="text-2xl font-semibold mb-4">Danh sách sinh viên</h1>
@@ -112,7 +144,8 @@ export default function AccountListStudent() {
           <div className="flex flex-wrap justify-between items-start mb-8">
             <div className="flex items-center gap-4 mb-2">
               <label className="input input-bordered flex items-center gap-2 h-10">
-                <input type="text" className="grow" placeholder="Tìm kiếm sinh viên ...." />
+                <input type="text" className="grow" placeholder="Tìm kiếm sinh viên ...." value={searchTerm}
+                  onChange={handleSearchChange} />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
@@ -131,6 +164,7 @@ export default function AccountListStudent() {
             </div>
             <Button class="btn bg-main hover:bg-main-hover text-white" onClick={() => setOpenAdd(true)}>+ Thêm tài khoản</Button>
           </div>
+
           <Table>
             <TableHeader>
               <TableRow>
@@ -139,19 +173,19 @@ export default function AccountListStudent() {
                 <TableHead className="hidden sm:table-cell">Lớp</TableHead>
                 <TableHead className="hidden sm:table-cell">Email</TableHead>
                 <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
-                <TableHead className="text-center">Tổng điểm</TableHead>
+                <TableHead className="text-center">Địa chỉ</TableHead>
                 {/* <TableHead className="text-right">Thao tác</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {studentData?.content?.map((student, index) => (
+              {(searchTerm ? searchResults?.content : studentData?.content)?.map((student, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium text-center hidden sm:table-cell">{student.studentId}</TableCell>
                   <TableCell>{student.fullname}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.clazz}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.email}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.phoneNumber}</TableCell>
-                  <TableCell className="text-center font-medium">0</TableCell>
+                  <TableCell className="text-center font-medium">{student.address}</TableCell>
                   <TableCell className="text-center">
                     <Button
                       variant="ghost"
@@ -244,3 +278,4 @@ export default function AccountListStudent() {
     </div>
   );
 }
+

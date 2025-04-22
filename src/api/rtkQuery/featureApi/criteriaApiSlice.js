@@ -17,22 +17,24 @@ export const criteriaApiSlice = apiSlice.injectEndpoints({
 
         getFalcutyCriteriaInSemester: builder.query({
             query: (semesterID) => `/api/v1/five_good_lcd/${semesterID}`,
+            providesTags: ['FalcutyCriteria'],
         }),
         getSchoolCriteriaInSemester: builder.query({
             query: (semesterID) => `/api/v1/five_good/${semesterID}`,
+            providesTags: ['SchoolCriteria'],
         }),
 
         removeSchoolCriteria: builder.mutation({
             query: (id) => ({
                 url: `/api/v1/five_good/delete/${id}`,
-                method: 'PUT',
+                method: 'DELETE',
             }),
             invalidatesTags: ['SchoolCriteria'],
         }),
         removeFalcutyCriteria: builder.mutation({
             query: (id) => ({
                 url: `/api/v1/five_good_lcd/delete/${id}`,
-                method: 'PUT',
+                method: 'DELETE',
             }),
             invalidatesTags: ['FalcutyCriteria'],
         }),
@@ -45,6 +47,51 @@ export const criteriaApiSlice = apiSlice.injectEndpoints({
             query: (semesterId) => `/api/v1/lcd_criteria/completed?semesterId=${semesterId}`,
         }),
 
+
+        // sửa tiêu chí
+        updateSchoolCriteria: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/api/v1/five_good/${id}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['SchoolCriteria'],
+        }),
+
+        // thêm tiêu chí
+          // Mutation để thêm tiêu chí mới
+          addSchoolCriteria: builder.mutation({
+            query: (newCriteria) => ({
+                url: "/api/v1/five_good", // URL API của bạn
+                method: "POST", // Phương thức POST
+                body: newCriteria, // Dữ liệu gửi lên API
+            }),
+            // Sau khi thành công, có thể invalidates các tag liên quan hoặc tự động refetch lại
+            invalidatesTags: ['SchoolCriteria'],
+        }),
+         // sửa tiêu chí
+         updateFalcutyCriteria: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/api/v1/five_good_lcd/${id}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['FalcutyCriteria'],
+        }),
+
+        // thêm tiêu chí
+          // Mutation để thêm tiêu chí mới
+          addFalcutyCriteria: builder.mutation({
+            query: (newCriteria) => ({
+                url: "/api/v1/five_good_lcd", // URL API của bạn
+                method: "POST", // Phương thức POST
+                body: newCriteria, // Dữ liệu gửi lên API
+            }),
+            // Sau khi thành công, có thể invalidates các tag liên quan hoặc tự động refetch lại
+            invalidatesTags: ['FalcutyCriteria'],
+        }),
+        
+
     }),
 });
 
@@ -56,5 +103,9 @@ export const { useGetFalcutyCriteriaQuery,
                 useRemoveSchoolCriteriaMutation,
                 useRemoveFalcutyCriteriaMutation,
                 useGetCompletedStudentCriteriaQuery,
-                useGetCompletedLcdCriteriaQuery 
+                useGetCompletedLcdCriteriaQuery,
+                useUpdateSchoolCriteriaMutation,
+                useAddSchoolCriteriaMutation,
+                useUpdateFalcutyCriteriaMutation,
+                useAddFalcutyCriteriaMutation,
             } = criteriaApiSlice;

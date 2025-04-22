@@ -25,7 +25,22 @@ export const studentApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Students'], // Cập nhật danh sách sinh viên sau khi đăng ký
         }),
-       
+        bulkRegisterStudents: builder.mutation({
+            query: (formData) => ({
+                url: `/api/v1/users/add-student-exel`,
+                method: 'POST',
+                body: formData,
+                formData: true, // Cho phép multipart/form-data
+            }),
+            invalidatesTags: ['Students'],
+        }),
+        // Endpoint tìm kiếm sinh viên
+        searchStudents: builder.query({
+            query: ({ search, page = 0, size = 10 }) =>
+                `/api/v1/users/search/student?search=${search}&page=${page}&size=${size}`,
+            providesTags: ['Students'],
+        }),
+
     }),
 });
 
@@ -33,5 +48,7 @@ export const {
     useGetAllStudentsQuery,
     useGetAllLcdQuery,
     useGetAllOtherAccountQuery,
-    useRegisterStudentMutation
+    useRegisterStudentMutation,
+    useBulkRegisterStudentsMutation,
+    useSearchStudentsQuery,
 } = studentApiSlice;

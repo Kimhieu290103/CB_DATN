@@ -76,7 +76,7 @@ const ExternalEventConfirmItem = ({ event }) => {
                         </Avatar>
                         <div>
                             <h3 className="font-semibold">{event?.studentName}</h3>
-                            <p className="text-sm text-slate-600">102210007</p>
+                            <p className="text-sm text-slate-600">{event?.studentId}</p>
                         </div>
                     </div>
 
