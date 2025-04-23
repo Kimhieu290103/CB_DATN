@@ -17,7 +17,17 @@ export const otherApiSlice = apiSlice.injectEndpoints({
         }),
         getAllClasses: builder.query({
             query: () => "/api/v1/class/all",
+            providesTags: ['Class'],
           }),
+          createClass: builder.mutation({
+            query: (newClass) => ({
+                url: "/api/v1/class/create",
+                method: "POST",
+                body: newClass,
+            }),
+            invalidatesTags: ['Class'],
+        }),
+        
     }),
 });
 
@@ -25,5 +35,6 @@ export const {
     useGetDepartmentQuery,
     useGetCoursesQuery,
     useGetClassesMutation,
-    useGetAllClassesQuery
+    useGetAllClassesQuery,
+    useCreateClassMutation
  } = otherApiSlice;
