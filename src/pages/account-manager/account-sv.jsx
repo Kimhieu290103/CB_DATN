@@ -41,9 +41,9 @@ export default function AccountListStudent() {
     { refetchOnMountOrArgChange: true }
   );
   const { data: classes, isLoading: isClassLoading } = useGetAllClassesQuery();
-  const handleChangePageInParent = (newPage) => {
-    setPage(newPage);
-  };
+  const handleChangePageInParent = (e) => {
+    setPage(e.selected);
+};
 
   const handleChangeRowsPerPageInParent = (newRowsPerPage) => {
     setRowsPerPage(newRowsPerPage);
@@ -207,7 +207,7 @@ export default function AccountListStudent() {
 
           <div className="w-full my-4 px-4 flex justify-end items-center">
             <PaginationItem
-              totalPages={studentData?.totalPage}
+              totalPages={studentData?.totalPages}
               rowsPerPage={rowsPerPage}
               handleChangePage={handleChangePageInParent}
               handleChangeRowsPerPage={handleChangeRowsPerPageInParent}

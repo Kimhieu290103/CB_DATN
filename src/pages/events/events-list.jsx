@@ -38,7 +38,7 @@ const EventsList = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const handleChangePageInParent = (e) => {
-        setPage(e.selected + 1);
+        setPage(e.selected);
     };
 
     const handleChangeRowsPerPageInParent = (rows) => {

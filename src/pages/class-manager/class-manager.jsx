@@ -134,9 +134,9 @@ export default function ListClass() {
   const [updateClass] = useUpdateClassMutation();
 
   const { toast } = useToast();
-  const handleChangePageInParent = (newPage) => {
-    setPage(newPage);
-  };
+  const handleChangePageInParent = (e) => {
+    setPage(e.selected);
+};
 
   const handleChangeRowsPerPageInParent = (newRowsPerPage) => {
     setRowsPerPage(newRowsPerPage);
@@ -416,7 +416,7 @@ export default function ListClass() {
 
           <div className="w-full my-4 px-4 flex justify-end items-center">
             <PaginationItem
-              totalPages={allClasses?.totalPage}
+              totalPages={allClasses?.totalPages}
               rowsPerPage={rowsPerPage}
               handleChangePage={handleChangePageInParent}
               handleChangeRowsPerPage={handleChangeRowsPerPageInParent}

@@ -61,7 +61,7 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
+                    <DropdownMenuLabel>{user?.fullname}</DropdownMenuLabel>
                     
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logoutHandler}>Đăng xuất</DropdownMenuItem>

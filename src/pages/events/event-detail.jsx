@@ -58,12 +58,16 @@ const EventDetail = () => {
         </div>
 
         <div className="flex flex-wrap gap-6">
-            <img 
+            {/* <img 
                 src={event?.eventImage[0].imageUrl}
                 alt="event-img" 
                 className="w-full md:w-3/5 h-full object-cover rounded-lg"
-            />
-
+            /> */}
+                <img
+                    src={event?.eventImage?.[0]?.imageUrl || "/default-event-image.jpg"}
+                    alt="event-img"
+                    className="w-full md:w-3/5 h-full object-cover rounded-lg"
+                />
             <div>
                 <section className="mb-6 space-y-2">
                     <div className="flex items-center gap-1">
