@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ClassCListFilterItem from "./class-filter";
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import PaginationItem from "@/components/items/pagination/pagination";
 import {
   Table,
   TableBody,
@@ -16,7 +18,9 @@ import {
   useGetClassesMutation,
   useCreateClassMutation,
   useGetDepartmentQuery,
-  useGetCoursesQuery  // Giả sử bạn có API để tạo lớp học
+  useGetCoursesQuery,
+  useUpdateClassMutation,
+  useGetAllClassesPagedQuery
 } from "@/api/rtkQuery/featureApi/otherApiSlice";
 
 // Dialog Component
@@ -57,8 +61,8 @@ const CreateClassDialog = ({ isOpen, onClose, onCreate }) => {
               required
             />
           </div>
-            {/* Department select dropdown */}
-            <div className="mb-4">
+          {/* Department select dropdown */}
+          <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Khoa</label>
             {isLoading ? (
               <p>Đang tải dữ liệu khoa...</p>
@@ -119,13 +123,28 @@ const CreateClassDialog = ({ isOpen, onClose, onCreate }) => {
 };
 
 export default function ListClass() {
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({ departmentID: "", courseID: "" });
   const [filteredClasses, setFilteredClasses] = useState([]);
-  const { data: allClasses, isLoading: isClassesLoading, isError: isClassesError } = useGetAllClassesQuery();
+  const { data: allClasses, isLoading: isClassesLoading, isError: isClassesError } = useGetAllClassesPagedQuery( { page, limit: rowsPerPage },
+    { refetchOnMountOrArgChange: true });
   const [getClasses, { isLoading: isFilterLoading }] = useGetClassesMutation();
   const [createClass, { isLoading: isCreatingClass }] = useCreateClassMutation();
-  const { toast } = useToast();
+  const [updateClass] = useUpdateClassMutation();
 
+  const { toast } = useToast();
+  const handleChangePageInParent = (newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPageInParent = (newRowsPerPage) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(0);
+  };
+  // Trong component ListClass:
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false); // State để mở/đóng dialog
 
   const handleFilterResults = async (newFilters) => {
@@ -148,12 +167,12 @@ export default function ListClass() {
       status: true,
       course: classInfo.courseId,
     };
-  
+
     try {
       console.log("Thông tin lớp học đã gửi:", JSON.stringify(dataToSend, null, 2));
       const response = await createClass(dataToSend).unwrap();
       console.log("Lớp học mới đã được tạo:", response);
-  
+
       toast({
         title: "Thành công",
         description: `Lớp học đã được tạo thành công!`,
@@ -170,17 +189,124 @@ export default function ListClass() {
       });
     }
   };
-  
-  
+
+
 
   const classesToDisplay =
     (filters.departmentID || filters.courseID) && filteredClasses.length > 0
       ? filteredClasses
-      : allClasses;
+      : allClasses?.content;
 
   const isLoadingData = isClassesLoading || isFilterLoading;
   const isErrorData = isClassesError;
 
+  const handleEditClass = (clazz) => {
+    setSelectedClass(clazz);
+    setEditDialogOpen(true);
+  };
+  const handleUpdateClass = async (updatedClassInfo) => {
+    const dataToSend = {
+      id: selectedClass.id, 
+      name: updatedClassInfo.name,
+      departmentId: updatedClassInfo.departmentId,
+      courseId: updatedClassInfo.courseId, 
+      status: true, 
+    };
+  
+    try {
+      console.log("Dữ liệu cập nhật:", dataToSend);
+      const response = await updateClass(dataToSend).unwrap();
+      console.log("Lớp học đã được cập nhật:", response);
+  
+      toast({
+        title: "Thành công",
+        description: `Lớp học đã được cập nhật thành công!`,
+        variant: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error("Lỗi khi cập nhật lớp học:", error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể cập nhật lớp học. Vui lòng thử lại.",
+        variant: "destructive",
+        action: <ToastAction altText="Thử lại">Thử lại</ToastAction>,
+      });
+    }
+  };
+  
+  const handleDeleteClass = (clazzId) => {
+    // TODO: Gọi mutation xóa lớp học
+    console.log("Xóa lớp với ID:", clazzId);
+  };
+  const EditClassDialog = ({ isOpen, onClose, onSubmit, initialData }) => {
+    const isEditing = !!initialData;
+    const [classInfo, setClassInfo] = useState(initialData || { name: "", departmentId: "", courseId: "" });
+    const { data: departments, isLoading: loadingDepartments } = useGetDepartmentQuery();
+    const { data: courses, isLoading: loadingCourses } = useGetCoursesQuery();
+
+    useEffect(() => {
+      if (initialData) {
+        setClassInfo({
+          name: initialData.name || "",
+          departmentId: initialData.department?.id || "",
+          courseId: initialData.course?.id || "",
+        });
+      }
+    }, [initialData]);
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setClassInfo({ ...classInfo, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      handleUpdateClass(classInfo);
+      onClose();
+    };
+
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded-lg w-96">
+          <h2 className="text-2xl font-semibold mb-4">Chỉnh sửa lớp học</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Tên lớp học</label>
+              <input type="text" name="name" value={classInfo.name} onChange={handleChange} className="input input-bordered w-full" required />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Khoa</label>
+              <select name="departmentId" value={classInfo.departmentId} onChange={handleChange} className="input input-bordered w-full" required>
+                <option value="">Chọn khoa</option>
+                {departments?.map((d) => (
+                  <option key={d.id} value={d.id}>{d.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Khóa học</label>
+              <select name="courseId" value={classInfo.courseId} onChange={handleChange} className="input input-bordered w-full" required>
+                <option value="">Chọn khóa học</option>
+                {courses?.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-4">
+              <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
+              <Button type="submit" className="bg-main text-white">Cập nhật</Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
   return (
     <div className="mx-auto py-4 px-0">
       <h1 className="text-2xl font-semibold mb-4">Danh sách lớp học</h1>
@@ -255,26 +381,61 @@ export default function ListClass() {
                   <TableCell className="text-center">
                     {clazz.department?.name}
                   </TableCell>
-                  <TableCell className="text-center flex justify-center items-center">
-  <Button
-    variant="ghost"
-    size="icon"
-    className="w-8 h-8 flex items-center justify-center"
-  >
-    <span className="material-symbols-outlined">more_vert</span>
-  </Button>
-</TableCell>
+                  <TableCell className="text-center">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="w-8 h-8">
+                          <span className="material-symbols-outlined">more_vert</span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-40 p-2">
+                        <div className="flex flex-col space-y-2">
+                          <Button
+                            variant="ghost"
+                            className="justify-start"
+                            onClick={() => handleEditClass(clazz)}
+                          >
+                            Chỉnh sửa lớp
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="justify-start text-red-500"
+                            onClick={() => handleDeleteClass(clazz.id)}
+                          >
+                            Xóa lớp
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </TableCell>
+
                 </TableRow>
               ))}
             </TableBody>
           </Table>
 
+          <div className="w-full my-4 px-4 flex justify-end items-center">
+            <PaginationItem
+              totalPages={allClasses?.totalPage}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePageInParent}
+              handleChangeRowsPerPage={handleChangeRowsPerPageInParent}
+            />
+          </div>
           {/* Dialog để thêm lớp học */}
           <CreateClassDialog
             isOpen={isDialogOpen}
             onClose={() => setDialogOpen(false)}
             onCreate={handleCreateClass}
           />
+          <EditClassDialog
+            isOpen={isEditDialogOpen}
+            onClose={() => setEditDialogOpen(false)}
+            onSubmit={handleUpdateClass}
+            initialData={selectedClass}
+          />
+
+
         </>
       )}
     </div>

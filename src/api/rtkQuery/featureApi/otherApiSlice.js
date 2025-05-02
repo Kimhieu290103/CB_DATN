@@ -27,6 +27,26 @@ export const otherApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Class'],
         }),
+        updateClass: builder.mutation({
+            query: ({ id, name, departmentId, courseId, status }) => ({
+              url: `/api/v1/class/update/${id}`,
+              method: "PUT",
+              body: { name, departmentId, courseId, status },
+            }),
+            invalidatesTags: ['Class'],  
+          }),
+          deleteClass: builder.mutation({
+            query: (id) => ({
+              url: `/api/v1/class/status/${id}`,
+              method: "PUT"
+            }),
+            invalidatesTags: ['Class'],
+          }),
+          getAllClassesPaged: builder.query({
+            query: ({ page = 0, limit = 10 }) => `/api/v1/class/paged?page=${page}&limit=${limit}`,
+            providesTags: ['Class'],
+        }),
+        
         
     }),
 });
@@ -36,5 +56,8 @@ export const {
     useGetCoursesQuery,
     useGetClassesMutation,
     useGetAllClassesQuery,
-    useCreateClassMutation
+    useCreateClassMutation,
+    useUpdateClassMutation,
+    useDeleteClassMutation,
+    useGetAllClassesPagedQuery, 
  } = otherApiSlice;
