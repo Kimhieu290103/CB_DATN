@@ -41,6 +41,19 @@ export const studentApiSlice = apiSlice.injectEndpoints({
             providesTags: ['Students'],
         }),
 
+
+         // 👇 Thêm mới: API lấy thông tin tài khoản
+         getUserInfo: builder.query({
+            query: () => `/api/v1/users/info`,
+        }),
+        changePassword: builder.mutation({
+            query: (credentials) => ({
+                url: `/api/v1/users/change-password`,
+                method: 'POST',
+                body: credentials, // { oldPassword: '...', newPassword: '...' }
+            }),
+        }),
+        
     }),
 });
 
@@ -51,4 +64,6 @@ export const {
     useRegisterStudentMutation,
     useBulkRegisterStudentsMutation,
     useSearchStudentsQuery,
+    useGetUserInfoQuery,
+    useChangePasswordMutation,
 } = studentApiSlice;

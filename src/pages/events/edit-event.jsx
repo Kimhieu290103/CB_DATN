@@ -1,30 +1,31 @@
-import { useRef } from "react";
+import { useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from "@/components/ui/toast";
 
-// import UploadImageItem from "@/components/items/file-media/upload-image";
+import UploadImageItem from "@/components/items/file-media/upload-image";
 import NewOrEditEvent from "@/components/cards/manage-events/new-or-edit-event";
 import URLS from "@/routes/urls";
 
 import { useSelector } from "react-redux";
-import { useEditEventMutation, useGetEventByIdQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
+import { useEditEventMutation, useGetEventByIdQuery,useUploadEventImageMutation } from "@/api/rtkQuery/featureApi/eventApiSlice";
 
 const EditEvent = () => {
     const { toast } = useToast();
     const navigateTo = useNavigate();
     const newOrEditEventRef = useRef(null);
-    // const [eventPanel, setEventPanel] = useState([]);
+    const [eventPanel, setEventPanel] = useState(null); // mặc định là null
+    const [uploadEventImage] = useUploadEventImageMutation();
 
     const eventID = useSelector((state) => state.events.eventID);
     const { data: event } = useGetEventByIdQuery(eventID);
 
-    // const handleGetImage = (image) => {
-    //     setEventPanel(image);
-    // }
+    const handleGetImage = (image) => {
+        setEventPanel(image);
+    }
 
     const [editEvent, { isLoading }] = useEditEventMutation();
     const handleSubmit = async () => {
@@ -37,8 +38,15 @@ const EditEvent = () => {
             if (!eventData) return; 
     
             const formData = new FormData();
+            // Nếu ảnh mới được chọn, upload ảnh
+            if (eventPanel) {
+                const imageFormData = new FormData();
+                imageFormData.append("files", eventPanel); // Thêm ảnh vào formData
+                await uploadEventImage({ eventId: eventID, imageData: imageFormData }).unwrap();
+            }
 
-            // formData.append("files", eventPanel);
+
+            formData.append("files", eventPanel);
             Object.keys(eventData).forEach(key => {
                 if (eventData[key] !== null) {
                     formData.append(key, eventData[key]);
@@ -74,14 +82,20 @@ const EditEvent = () => {
             event={event}
         />
 
-        {/* <Separator className="my-10" />
+        <Separator className="my-10" />
 
         <div className="flex items-center gap-1 mt-8 mb-4">
             <span className="material-symbols-outlined text-main">wallpaper</span>
             <h3 className="font-bold font-inter text-lg text-main">Ảnh bìa</h3>
         </div>
 
-        <UploadImageItem getImages={handleGetImage} /> */}
+        {event && (
+    <UploadImageItem 
+        getImages={handleGetImage} 
+        defaultImageUrl={event?.eventImage?.[0]?.imageUrl}
+    />
+)}
+
 
         {isLoading 
             ? <Button className='mt-8bg-main-hover float-end' disabled>

@@ -150,7 +150,7 @@ const CommunityScoreList = () => {
                             <p>Không có sự kiện nào tham gia.</p>
                         )
                     )}
-                    <Button onClick={() => setSelectedStudent(null)} className="mt-4 w-full">Đóng</Button>
+                    <Button onClick={() => setSelectedStudent(null)}  className="btn bg-[rgb(10_103_175)] hover:bg-[rgb(8_82_139)] text-white">Đóng</Button>
                 </DialogContent>
             </Dialog>
         </>

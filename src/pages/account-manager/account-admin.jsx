@@ -1,5 +1,6 @@
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import ScoreListFilterItem from "@/components/items/community-score/score-list-filter";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
     Table,
     TableBody,
@@ -31,16 +32,16 @@ export default function AccountListStudent() {
     const { data: studentData, isLoading, isError } = useGetAllOtherAccountQuery(undefined, {
         refetchOnMountOrArgChange: true,
     });
-  // In ra console để kiểm tra khi dữ liệu được tải
-  useEffect(() => {
-    if (isLoading) {
-        console.log("Đang tải dữ liệu...");
-    } else if (isError) {
-        console.log("Lỗi khi tải dữ liệu.");
-    } else {
-        console.log("Dữ liệu tải thành công:", studentData);
-    }
-}, [isLoading, isError, studentData]);
+    // In ra console để kiểm tra khi dữ liệu được tải
+    useEffect(() => {
+        if (isLoading) {
+            console.log("Đang tải dữ liệu...");
+        } else if (isError) {
+            console.log("Lỗi khi tải dữ liệu.");
+        } else {
+            console.log("Dữ liệu tải thành công:", studentData);
+        }
+    }, [isLoading, isError, studentData]);
 
     const [formData, setFormData] = useState({
         fullname: '',
@@ -70,7 +71,7 @@ export default function AccountListStudent() {
 
     return (
         <div className="mx-auto py-4 px-0">
-            <h1 className="text-2xl font-semibold mb-4">Danh sách sinh viên</h1>
+            <h1 className="text-2xl font-semibold mb-4">Danh sách tài khoản cán bộ</h1>
 
             {isLoading ? (
                 <p>Đang tải dữ liệu...</p>
@@ -108,7 +109,7 @@ export default function AccountListStudent() {
                                 <TableHead className="hidden sm:table-cell">Vai trò</TableHead>
                                 <TableHead className="hidden sm:table-cell">Email</TableHead>
                                 <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
-                           
+                                <TableHead className="text-center">Tùy chọn</TableHead>
                                 {/* <TableHead className="text-right">Thao tác</TableHead> */}
                             </TableRow>
                         </TableHeader>
@@ -120,19 +121,29 @@ export default function AccountListStudent() {
                                     <TableCell className="hidden sm:table-cell">{student.role}</TableCell>
                                     <TableCell className="hidden sm:table-cell">{student.email}</TableCell>
                                     <TableCell className="hidden sm:table-cell">{student.phoneNumber}</TableCell>
-                      
+
                                     <TableCell className="text-center">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="w-8 h-8 flex items-center justify-center"
-                                            onClick={() => {
-                                                setSelectedStudent(student);
-                                                setOpen(true);
-                                            }}
-                                        >
-                                            <span className="material-symbols-outlined">visibility</span>
-                                        </Button>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button variant="ghost" size="icon" className="w-8 h-8">
+                                                    <span className="material-symbols-outlined">more_vert</span>
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-40 p-2">
+                                                <div className="flex flex-col space-y-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="justify-start"
+                                                        onClick={() => {
+                                                            setSelectedStudent(student);
+                                                            setOpen(true);
+                                                        }}
+                                                    >
+                                                        Chi tiết
+                                                    </Button>
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -147,15 +158,12 @@ export default function AccountListStudent() {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Chi tiết sinh viên</DialogTitle>
+                        <DialogTitle>Chi tiết thông tin tài khoản</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-2">
                         <p><strong>Họ tên:</strong> {selectedStudent?.fullname}</p>
-                        <p><strong>MSSV:</strong> {selectedStudent?.studentId}</p>
                         <p><strong>Email:</strong> {selectedStudent?.email}</p>
                         <p><strong>SĐT:</strong> {selectedStudent?.phoneNumber}</p>
-                        <p><strong>Lớp:</strong> {selectedStudent?.clazz}</p>
-                        <p><strong>Khoa:</strong> {selectedStudent?.department}</p>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -181,8 +189,6 @@ export default function AccountListStudent() {
                         <div className="flex justify-end gap-2">
                             <Button onClick={handleSubmit}>Lưu</Button>
                         </div>
-
-
                     </div>
                 </DialogContent>
             </Dialog>

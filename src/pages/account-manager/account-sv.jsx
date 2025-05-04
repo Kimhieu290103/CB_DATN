@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ScoreListFilterItem from "@/components/items/community-score/score-list-filter";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -43,7 +44,7 @@ export default function AccountListStudent() {
   const { data: classes, isLoading: isClassLoading } = useGetAllClassesQuery();
   const handleChangePageInParent = (e) => {
     setPage(e.selected);
-};
+  };
 
   const handleChangeRowsPerPageInParent = (newRowsPerPage) => {
     setRowsPerPage(newRowsPerPage);
@@ -174,6 +175,7 @@ export default function AccountListStudent() {
                 <TableHead className="hidden sm:table-cell">Email</TableHead>
                 <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
                 <TableHead className="text-center">Địa chỉ</TableHead>
+                <TableHead className="text-center">Tùy chọn</TableHead>
                 {/* <TableHead className="text-right">Thao tác</TableHead> */}
               </TableRow>
             </TableHeader>
@@ -185,19 +187,39 @@ export default function AccountListStudent() {
                   <TableCell className="hidden sm:table-cell">{student.clazz}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.email}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.phoneNumber}</TableCell>
-                  <TableCell className="text-center font-medium">{student.address}</TableCell>
+                  <TableCell className="text-center font-medium">
+                    {student.address.length > 20 ? student.address.slice(0, 20) + '...' : student.address}
+                  </TableCell>
+
                   <TableCell className="text-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-8 h-8 flex items-center justify-center"
-                      onClick={() => {
-                        setSelectedStudent(student);
-                        setOpen(true);
-                      }}
-                    >
-                      <span className="material-symbols-outlined">visibility</span>
-                    </Button>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="w-8 h-8">
+                          <span className="material-symbols-outlined">more_vert</span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-40 p-2">
+                        <div className="flex flex-col space-y-2">
+                          <Button
+                            variant="ghost"
+                            className="justify-start"
+                            onClick={() => {
+                              setSelectedStudent(student);
+                              setOpen(true);
+                            }}
+                          >
+                            Chi tiết
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="justify-start text-red-500"
+
+                          >
+                            Khóa tài khoản
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                 </TableRow>
               ))}
@@ -228,6 +250,7 @@ export default function AccountListStudent() {
             <p><strong>SĐT:</strong> {selectedStudent?.phoneNumber}</p>
             <p><strong>Lớp:</strong> {selectedStudent?.clazz}</p>
             <p><strong>Khoa:</strong> {selectedStudent?.department}</p>
+            <p><strong>Địa chỉ:</strong> {selectedStudent?.address}</p>
           </div>
         </DialogContent>
       </Dialog>

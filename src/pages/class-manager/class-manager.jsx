@@ -20,7 +20,8 @@ import {
   useGetDepartmentQuery,
   useGetCoursesQuery,
   useUpdateClassMutation,
-  useGetAllClassesPagedQuery
+  useGetAllClassesPagedQuery,
+  useDeleteClassMutation
 } from "@/api/rtkQuery/featureApi/otherApiSlice";
 
 // Dialog Component
@@ -132,6 +133,7 @@ export default function ListClass() {
   const [getClasses, { isLoading: isFilterLoading }] = useGetClassesMutation();
   const [createClass, { isLoading: isCreatingClass }] = useCreateClassMutation();
   const [updateClass] = useUpdateClassMutation();
+  const [deleteClass] = useDeleteClassMutation();
 
   const { toast } = useToast();
   const handleChangePageInParent = (e) => {
@@ -235,10 +237,24 @@ export default function ListClass() {
     }
   };
   
-  const handleDeleteClass = (clazzId) => {
-    // TODO: Gọi mutation xóa lớp học
-    console.log("Xóa lớp với ID:", clazzId);
+  const handleDeleteClass = async (clazzId) => {
+    try {
+      await deleteClass(clazzId).unwrap();
+      toast({
+        title: "Thành công",
+        description: "Lớp học đã được xóa!",
+        variant: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Không thể xóa lớp học.",
+        variant: "destructive",
+      });
+    }
   };
+  
   const EditClassDialog = ({ isOpen, onClose, onSubmit, initialData }) => {
     const isEditing = !!initialData;
     const [classInfo, setClassInfo] = useState(initialData || { name: "", departmentId: "", courseId: "" });

@@ -49,7 +49,7 @@ const ScoreListFilterItem = ({onFilterResults}) => {
 
     return ( 
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                 <Button variant="outline">
                     <span className="material-symbols-outlined pr-0.5">filter_list</span>
                     Bộ lọc
@@ -115,7 +115,7 @@ const ScoreListFilterItem = ({onFilterResults}) => {
                                     name="classes"
                                     index={index}
                                     label={Class?.name}
-                                    value={Class?.id}
+                                    value={String(Class?.id)}
                                     onCheckboxChange={handleCheckboxChange}
                                 />
                             ))}

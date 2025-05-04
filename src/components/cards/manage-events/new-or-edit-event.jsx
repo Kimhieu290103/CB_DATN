@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { isBefore } from "date-fns";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-
 import { Separator } from "@/components/ui/separator";
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
@@ -76,7 +75,7 @@ const NewOrEditEvent = forwardRef(({ onHandleEventInParent }, ref) => {
     // }, [falcutyCriteria, schoolCriteria]);
 
     useEffect(() => {
-        if (falcutyCriteria && schoolCriteria && academicYears && event) {
+        if ( event) {
             setEventTitle(event.name || "");
             setEventLocation(event.location || "");
             setEventContent(event.description || "");

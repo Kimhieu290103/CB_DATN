@@ -1,4 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useState } from "react";
+import UserInfoDialog from "@/components/ui/profile";
+import ChangePasswordDialog from  "@/components/ui/change-pass";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,6 +11,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import UserDefaultAvatar from "@/assets/user-default-avt.jpg";
 
 
@@ -20,15 +29,30 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const navigateTo = useNavigate();
     const user = useSelector(state => state.auth.login.user);
-
     const path = window.location.pathname;
-    
+    const [openPopover, setOpenPopover] = useState(false);
     const logoutHandler = () => {
         dispatch(logout());
         navigateTo('/');
     }
+    const [showUserInfo, setShowUserInfo] = useState(false);
+    const [previousFocus, setPreviousFocus] = useState(null);
+
+    const handleOpenUserInfo = () => {
+        setPreviousFocus(document.activeElement); // Save the current focused element
+        setShowUserInfo(true);
+    };
+    const [openChangePassword, setOpenChangePassword] = useState(false);
+    const handleOpenChangePassword = () => {
+        setOpenChangePassword(true);
+        setOpenPopover(false);
+    };
+    const handleCloseChangePassword = () => {
+        setOpenChangePassword(false);
+    };
 
     return ( 
+        <>
         <nav className="flex flex-wrap justify-between items-center px-5 md:px-12 bg-main h-16">
             <h1 className="uppercase font-semibold text-sm text-white">
                 {path === URLS.MANAGE_EVENTS || 
@@ -52,22 +76,40 @@ const Navbar = () => {
                  :''}
             </h1>
 
-            <DropdownMenu>
-                <DropdownMenuTrigger className="ml-5">
-                    <Avatar>
-                        <AvatarImage src={UserDefaultAvatar} />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>{user?.fullname}</DropdownMenuLabel>
-                    
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logoutHandler}>Đăng xuất</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Popover open={openPopover} onOpenChange={setOpenPopover} modal={false} align="start" sideOffset={-20}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" className="p-0 ml-5">
+                            <Avatar>
+                                <AvatarImage src={UserDefaultAvatar} />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-40 p-2 rounded-md shadow-md bg-popover text-popover-foreground leading-snug">
+                        <div className="flex flex-col space-y-2">
+                            <div className="px-4 py-1.5 font-semibold">{user?.fullname}</div>
+                            <div className="h-px bg-border" />
+                            <Button variant="ghost" className="justify-start hover:bg-secondary hover:text-secondary-foreground" onClick={handleOpenUserInfo}>
+                                Thông tin cá nhân
+                            </Button>
+                            <Button variant="ghost" className="justify-start hover:bg-secondary hover:text-secondary-foreground"onClick={handleOpenChangePassword}>
+                                Đổi mật khẩu
+                            </Button>
+                            <div className="h-px bg-border" />
+                                <Button variant="ghost" className="justify-start hover:bg-secondary hover:text-secondary-foreground text-red-600 hover:text-red-700" onClick={logoutHandler}>
+                                    Đăng xuất
+                                </Button>
+                        </div>
+                    </PopoverContent>
+                </Popover>
         </nav>
+         {/* Hiển thị Modal */}
+         <UserInfoDialog open={showUserInfo} onOpenChange={setShowUserInfo} previousFocus={previousFocus} />
+         <ChangePasswordDialog // Render component đổi mật khẩu
+                open={openChangePassword}
+                onOpenChange={handleCloseChangePassword}
+            />
+        </>
      );
 }
  

@@ -24,6 +24,17 @@ export const eventApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Events'],
         }),
+
+          // Thêm API upload ảnh
+          uploadEventImage: builder.mutation({
+            query: ({ eventId, imageData }) => ({
+                url: `/api/v1/events/uploadImage/${eventId}`,
+                method: 'POST',
+                body: imageData,
+            }),
+            invalidatesTags: ['Events'],
+        }),
+
         exportEventRegistration: builder.mutation({
             query: (eventID) => ({
                 url: `/api/v1/registrations/export/${eventID}`,
@@ -127,4 +138,5 @@ export const { useCreateEventMutation,
                 useApprovedSelectedStudentsMutation,
                 useApprovedStudentMutation,
                 useApprovedAllStudentsMutation,
+                useUploadEventImageMutation, 
             } = eventApiSlice;

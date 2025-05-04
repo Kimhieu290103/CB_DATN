@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ScoreListFilterItem from "@/components/items/community-score/score-list-filter";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import { useGetAllLcdQuery,useRegisterStudentMutation } from "@/api/rtkQuery/featureApi/accountApiSlice";
+import { useGetAllLcdQuery, useRegisterStudentMutation } from "@/api/rtkQuery/featureApi/accountApiSlice";
 import PaginationItem from "@/components/items/pagination/pagination";
 
 export default function AccountListLcd() {
@@ -20,7 +21,7 @@ export default function AccountListLcd() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  
+
   const { data: studentData, isLoading, isError } = useGetAllLcdQuery(
     { page, limit: rowsPerPage },
     { refetchOnMountOrArgChange: true }
@@ -61,13 +62,13 @@ export default function AccountListLcd() {
       console.error("Đăng ký thất bại:", error);
     }
   };
-  
+
 
   const handleFilterResults = (filters) => {
     setFilters(filters);
   };
-  const handleChangePageInParent = (newPage) => {
-    setPage(newPage);
+  const handleChangePageInParent = (e) => {
+    setPage(e.selected);
   };
 
   const handleChangeRowsPerPageInParent = (newRowsPerPage) => {
@@ -114,6 +115,7 @@ export default function AccountListLcd() {
                 <TableHead>Họ và tên</TableHead>
                 <TableHead className="hidden sm:table-cell">Email</TableHead>
                 <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
+                <TableHead className="text-center">Tùy chọn</TableHead>
                 {/* <TableHead className="text-right">Thao tác</TableHead> */}
               </TableRow>
             </TableHeader>
@@ -124,18 +126,30 @@ export default function AccountListLcd() {
                   <TableCell>{student.fullname}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.email}</TableCell>
                   <TableCell className="hidden sm:table-cell">{student.phoneNumber}</TableCell>
+
                   <TableCell className="text-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-8 h-8 flex items-center justify-center"
-                      onClick={() => {
-                        setSelectedStudent(student);
-                        setOpen(true);
-                      }}
-                    >
-                      <span className="material-symbols-outlined">visibility</span>
-                    </Button>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="w-8 h-8">
+                          <span className="material-symbols-outlined">more_vert</span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-40 p-2">
+                        <div className="flex flex-col space-y-2">
+                          <Button
+                            variant="ghost"
+                            className="justify-start"
+                            onClick={() => {
+                              setSelectedStudent(student);
+                              setOpen(true);
+                            }}
+                          >
+                            Chi tiết
+                          </Button>
+                         
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                 </TableRow>
               ))}
@@ -145,7 +159,7 @@ export default function AccountListLcd() {
 
           <div className="w-full my-4 px-4 flex justify-end items-center">
             <PaginationItem
-              totalPages={studentData?.totalPage}
+              totalPages={studentData?.totalPages}
               rowsPerPage={rowsPerPage}
               handleChangePage={handleChangePageInParent}
               handleChangeRowsPerPage={handleChangeRowsPerPageInParent}
@@ -157,92 +171,89 @@ export default function AccountListLcd() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Chi tiết sinh viên</DialogTitle>
+            <DialogTitle>Chi tiết liên chi đoàn</DialogTitle>
           </DialogHeader>
           <div className="grid gap-2">
             <p><strong>Họ tên:</strong> {selectedStudent?.fullname}</p>
-            <p><strong>MSSV:</strong> {selectedStudent?.studentId}</p>
             <p><strong>Email:</strong> {selectedStudent?.email}</p>
             <p><strong>SĐT:</strong> {selectedStudent?.phoneNumber}</p>
-            <p><strong>Lớp:</strong> {selectedStudent?.clazz}</p>
-            <p><strong>Khoa:</strong> {selectedStudent?.department}</p>
           </div>
         </DialogContent>
       </Dialog>
       <Dialog open={openAdd} onOpenChange={setOpenAdd}>
-  <DialogContent className="max-w-2xl">
-    <DialogHeader>
-      <DialogTitle>Thêm tài khoản sinh viên</DialogTitle>
-    </DialogHeader>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Thêm tài khoản sinh viên</DialogTitle>
+          </DialogHeader>
 
-    <div className="grid gap-4">
-      <div className="grid grid-cols-2 gap-4">
-        <input
-          name="fullname"
-          onChange={handleChange}
-          value={formData.fullname}
-          placeholder="Họ và tên"
-          className="input input-bordered"
-        />
-        <input
-          name="phone_number"
-          onChange={handleChange}
-          value={formData.phone_number}
-          placeholder="Số điện thoại"
-          className="input input-bordered"
-        />
-        <input
-          name="email"
-          onChange={handleChange}
-          value={formData.email}
-          placeholder="Email"
-          className="input input-bordered"
-        />
-        <input
-          name="address"
-          onChange={handleChange}
-          value={formData.address}
-          placeholder="Địa chỉ"
-          className="input input-bordered"
-        />
-        <input
-          type="date"
-          name="date_of_birth"
-          onChange={handleChange}
-          value={formData.date_of_birth}
-          className="input input-bordered"
-        />
-        <input
-          name="username"
-          onChange={handleChange}
-          value={formData.username}
-          placeholder="Tên đăng nhập"
-          className="input input-bordered"
-        />
-        <input
-          type="password"
-          name="password"
-          onChange={handleChange}
-          value={formData.password}
-          placeholder="Mật khẩu"
-          className="input input-bordered"
-        />
-        <input
-          type="password"
-          name="retype_password"
-          onChange={handleChange}
-          value={formData.retype_password}
-          placeholder="Nhập lại mật khẩu"
-          className="input input-bordered"
-        />
-      </div>
+          <div className="grid gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                name="fullname"
+                onChange={handleChange}
+                value={formData.fullname}
+                placeholder="Họ và tên"
+                className="input input-bordered"
+              />
+              <input
+                name="phone_number"
+                onChange={handleChange}
+                value={formData.phone_number}
+                placeholder="Số điện thoại"
+                className="input input-bordered"
+              />
+              <input
+                name="email"
+                onChange={handleChange}
+                value={formData.email}
+                placeholder="Email"
+                className="input input-bordered"
+              />
+              <input
+                name="address"
+                onChange={handleChange}
+                value={formData.address}
+                placeholder="Địa chỉ"
+                className="input input-bordered"
+              />
+              <input
+                type="date"
+                name="date_of_birth"
+                onChange={handleChange}
+                value={formData.date_of_birth}
+                className="input input-bordered"
+              />
+              <input
+                name="username"
+                onChange={handleChange}
+                value={formData.username}
+                placeholder="Tên đăng nhập"
+                className="input input-bordered"
+              />
+              <input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                value={formData.password}
+                placeholder="Mật khẩu"
+                className="input input-bordered"
+              />
+              <input
+                type="password"
+                name="retype_password"
+                onChange={handleChange}
+                value={formData.retype_password}
+                placeholder="Nhập lại mật khẩu"
+                className="input input-bordered"
+              />
+            </div>
 
-      <div className="flex justify-end gap-2">
-        <Button onClick={handleSubmit}>Lưu</Button>
-      </div>
-    </div>
-  </DialogContent>
-</Dialog>
+            <div className="flex justify-end gap-2">
+              <Button onClick={handleSubmit}>Lưu</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
     </div>
   );

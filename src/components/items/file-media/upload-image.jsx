@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 
 const UploadImageItem = (props) => {
     // const [selectedImage, setSelectedImage] = useState(null);
-    const [imageURL, setImageURL] = useState(null);
+    const [imageURL, setImageURL] = useState(props.defaultImageUrl || null);
+   
 
     const onSelectFile = (event) => {
         const file = event.target.files[0];
@@ -67,7 +68,8 @@ const UploadImageItem = (props) => {
 }
 
 UploadImageItem.propTypes = {
-    getImages: PropTypes.func.isRequired
+    getImages: PropTypes.func.isRequired,
+    defaultImageUrl: PropTypes.string,
 };
 
 export default UploadImageItem;
