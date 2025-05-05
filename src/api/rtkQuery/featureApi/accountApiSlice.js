@@ -53,6 +53,24 @@ export const studentApiSlice = apiSlice.injectEndpoints({
                 body: credentials, // { oldPassword: '...', newPassword: '...' }
             }),
         }),
+
+        updateProfile: builder.mutation({
+            query: ({ id, ...profileData }) => ({ // Nhận ID và phần còn lại của dữ liệu profile
+                url: `/api/v1/users/profile/${id}`, // Sử dụng ID trong URL
+                method: 'PUT', // Thường dùng PUT hoặc PATCH để cập nhật
+                body: profileData,
+            }),
+            invalidatesTags: ['Students'],
+        }),
+
+
+        deactivateUser: builder.mutation({ // Thêm mutation deactivateUser
+            query: (userId) => ({
+              url: `/api/v1/users/deactivate/${userId}`,
+              method: 'PUT', // Hoặc có thể là POST tùy theo API của bạn
+            }),
+            invalidatesTags: ['Students', 'Lcd', 'OtherAccount'], // Invalidate các tags liên quan
+          }),
         
     }),
 });
@@ -66,4 +84,6 @@ export const {
     useSearchStudentsQuery,
     useGetUserInfoQuery,
     useChangePasswordMutation,
+    useUpdateProfileMutation,
+    useDeactivateUserMutation, 
 } = studentApiSlice;

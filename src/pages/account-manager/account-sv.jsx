@@ -11,12 +11,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import EditProfileForm from '@/pages/account-manager/edit-account';
 import { useGetAllClassesQuery } from "@/api/rtkQuery/featureApi/otherApiSlice";
 import {
   useGetAllStudentsQuery,
   useRegisterStudentMutation,
   useBulkRegisterStudentsMutation,
-  useSearchStudentsQuery
+  useSearchStudentsQuery,
+  useDeactivateUserMutation
 } from "@/api/rtkQuery/featureApi/accountApiSlice";
 import PaginationItem from "@/components/items/pagination/pagination";
 
@@ -25,19 +27,26 @@ export default function AccountListStudent() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editingStudent, setEditingStudent] = useState(null);
   const [filters, setFilters] = useState({
     departmentID: '',
     courseID: '',
     classID: '',
     semesterID: '',
   });
+  const handleOpenEditModal = (student) => {
+    setEditingStudent(student);
+    setOpenEditModal(true);
+  };
   const handleFilterResults = (filters) => {
     setFilters(filters);
   };
   const [bulkRegisterStudents] = useBulkRegisterStudentsMutation();
   const [createStudent, { isLoading: isCreating }] = useRegisterStudentMutation();
+  const [deactivateUser] = useDeactivateUserMutation();
   const [openAdd, setOpenAdd] = useState(false);
-  const { data: studentData, isLoading, isError } = useGetAllStudentsQuery(
+  const { data: studentData, isLoading, isError,refetch } = useGetAllStudentsQuery(
     { page, limit: rowsPerPage },
     { refetchOnMountOrArgChange: true }
   );
@@ -132,6 +141,18 @@ export default function AccountListStudent() {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
+  const handleDeactivate = async (id) => {
+    if (confirm("Bạn có chắc muốn vô hiệu hóa tài khoản này?")) {
+      try {
+        await deactivateUser(id).unwrap();
+        alert("Đã vô hiệu hóa tài khoản.");
+        refetch();
+      } catch (error) {
+        console.error("Lỗi:", error);
+        alert("Không thể vô hiệu hóa.");
+      }
+    }
+  };
   return (
     <div className="mx-auto py-4 px-0">
       <h1 className="text-2xl font-semibold mb-4">Danh sách sinh viên</h1>
@@ -175,6 +196,7 @@ export default function AccountListStudent() {
                 <TableHead className="hidden sm:table-cell">Email</TableHead>
                 <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
                 <TableHead className="text-center">Địa chỉ</TableHead>
+                <TableHead className="text-center">Tình trạng</TableHead>
                 <TableHead className="text-center">Tùy chọn</TableHead>
                 {/* <TableHead className="text-right">Thao tác</TableHead> */}
               </TableRow>
@@ -190,7 +212,9 @@ export default function AccountListStudent() {
                   <TableCell className="text-center font-medium">
                     {student.address.length > 20 ? student.address.slice(0, 20) + '...' : student.address}
                   </TableCell>
-
+                  <TableCell className={`text-center font-medium ${student.active ? 'text-green-500' : 'text-red-500'}`}>
+                    {student.active ? 'Hoạt động' : 'Khóa'}
+                  </TableCell>
                   <TableCell className="text-center">
                     <Popover>
                       <PopoverTrigger asChild>
@@ -212,8 +236,15 @@ export default function AccountListStudent() {
                           </Button>
                           <Button
                             variant="ghost"
+                            className="justify-start"
+                            onClick={() => handleOpenEditModal(student)}
+                          >
+                            chỉnh sửa
+                          </Button>
+                          <Button
+                            variant="ghost"
                             className="justify-start text-red-500"
-
+                            onClick={() => handleDeactivate(student.id)}
                           >
                             Khóa tài khoản
                           </Button>
@@ -298,6 +329,43 @@ export default function AccountListStudent() {
           </div>
         </DialogContent>
       </Dialog>
+      {/* Modal chi tiết */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Chi tiết sinh viên</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-2">
+            <p><strong>Họ tên:</strong> {selectedStudent?.fullname}</p>
+            <p><strong>MSSV:</strong> {selectedStudent?.studentId}</p>
+            <p><strong>Email:</strong> {selectedStudent?.email}</p>
+            <p><strong>SĐT:</strong> {selectedStudent?.phoneNumber}</p>
+            <p><strong>Lớp:</strong> {selectedStudent?.clazz}</p>
+            <p><strong>Khoa:</strong> {selectedStudent?.department}</p>
+            <p><strong>Địa chỉ:</strong> {selectedStudent?.address}</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal chỉnh sửa */}
+      <Dialog open={openEditModal} onOpenChange={setOpenEditModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Chỉnh sửa thông tin sinh viên</DialogTitle>
+          </DialogHeader>
+          {editingStudent && (
+            <EditProfileForm
+              initialProfile={editingStudent}
+              userId={editingStudent.id} // Hoặc trường định danh duy nhất khác
+              onClose={() => setOpenEditModal(false)} // Thêm prop để đóng modal từ form
+              onEditSuccess={refetch} 
+              // Thêm các props khác nếu EditProfileForm cần
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+     
     </div>
   );
 }
