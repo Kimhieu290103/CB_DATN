@@ -69,7 +69,7 @@ export const eventApiSlice = apiSlice.injectEndpoints({
         }),
 
         getExternalEvents: builder.query({
-            query: () => "/api/external-events/pending",
+            query: () => "/api/v1/external-events/pending",
             providesTags: ['ExternalEvents'],
         }),
         approvedExternalEvent: builder.mutation({
@@ -114,10 +114,23 @@ export const eventApiSlice = apiSlice.injectEndpoints({
         }),
         // --------------------------------------------
 
-        // ----------------------------- New endpoint -----------------------------
+        // ----------------------------- tìm event -----------------------------
       
+        getEventsByName: builder.query({
+            query: (name) => `/api/v1/events/search?name=${encodeURIComponent(name)}`,
+          }),
 
+          getMyEventsByName: builder.query({
+            query: (name) => `/api/v1/events/search-myevents?name=${encodeURIComponent(name)}`,
+          }),
+          
         //......................................................
+
+
+         getExternalEventsByStatus: builder.query({
+      query: ({ userId,semesterId }) => 
+        `/api/v1/external-events/approved?userId=${userId}&semesterId=${semesterId}`,
+    }),
 
 
     }),
@@ -139,4 +152,7 @@ export const { useCreateEventMutation,
                 useApprovedStudentMutation,
                 useApprovedAllStudentsMutation,
                 useUploadEventImageMutation, 
+                useGetEventsByNameQuery,
+                useGetMyEventsByNameQuery,
+                 useGetExternalEventsByStatusQuery,
             } = eventApiSlice;

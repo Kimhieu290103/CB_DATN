@@ -16,8 +16,8 @@ import {
 import URLS from "@/routes/urls";
 import EventFilter from "@/components/items/manage-events/events-filter";
 
-import { useState } from "react";
-import { useGetAllEventsQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
+import { useState,useEffect } from "react";
+import { useGetAllEventsQuery,useGetEventsByNameQuery  } from "@/api/rtkQuery/featureApi/eventApiSlice";
 
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -28,10 +28,17 @@ import PaginationItem from "@/components/items/pagination/pagination";
 const AllEvents = () => {
     const dispatch = useDispatch();
     const navigateTo = useNavigate();
-
+    const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm.trim());
+        }, 300); // debounce 300ms
+        return () => clearTimeout(handler);
+    }, [searchTerm]);
+    
     const handleChangePageInParent = (e) => {
         setPage(e.selected );
     };
@@ -40,8 +47,13 @@ const AllEvents = () => {
         setRowsPerPage(rows);
     };
 
-    const { data: eventsData } = useGetAllEventsQuery({page, rowsPerPage}, {refetchOnMountOrArgChange: true});
-
+    // const { data: eventsData } = useGetAllEventsQuery({page, rowsPerPage}, {refetchOnMountOrArgChange: true});
+    const { data: allEventsData } = useGetAllEventsQuery({ page, rowsPerPage }, { refetchOnMountOrArgChange: true });
+    const { data: searchResultsData } = useGetEventsByNameQuery(debouncedSearchTerm, { skip: !debouncedSearchTerm, refetchOnMountOrArgChange: true });
+   // Xác định dữ liệu sự kiện sẽ hiển thị
+   const eventsData = debouncedSearchTerm ? searchResultsData : allEventsData;
+   const events = eventsData?.events || eventsData; // Handle both structures
+   const totalPage = allEventsData?.totalPage;
     const handleEventDetail = (id, eventName) => {
         dispatch(getEventID({ id, isEdit: false }));
         dispatch(getEventName(eventName));
@@ -59,7 +71,14 @@ const AllEvents = () => {
         <div className="flex flex-wrap justify-between items-center mb-8">
             <div className="flex items-center gap-4 mb-2">
                 <label className="input input-bordered flex items-center gap-2 h-10">
-                    <input type="text" className="grow" placeholder="Tìm kiếm sự kiện ...." />
+                   
+                        <input
+                            type="text"
+                            className="grow"
+                            placeholder="Tìm kiếm sự kiện ...."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 16 16"
@@ -78,7 +97,7 @@ const AllEvents = () => {
             </div>
 
         </div>
-        {eventsData?.events && eventsData?.events.length !== 0 ? (
+        {events && events.length !== 0 ? (
         <section>
             <Table>
                 <TableHeader>
@@ -91,7 +110,7 @@ const AllEvents = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {eventsData?.events?.map((event, index) => (
+                    {events?.map((event, index) => (
                         <TableRow key={index}>
                             <TableCell className="font-medium text-center hidden sm:table-cell">{index + 1}</TableCell>
                             <TableCell>{event.name}</TableCell>
@@ -126,14 +145,16 @@ const AllEvents = () => {
                 </TableBody>
                 
             </Table>
-            <div className="w-full my-4 px-4 flex justify-end items-center">
-                <PaginationItem 
-                    totalPages={eventsData?.totalPage} 
-                    rowsPerPage={rowsPerPage}
-                    handleChangePage={handleChangePageInParent} 
-                    handleChangeRowsPerPage={handleChangeRowsPerPageInParent}
-                />
-            </div>
+            {!debouncedSearchTerm && totalPage && (
+                        <div className="w-full my-4 px-4 flex justify-end items-center">
+                            <PaginationItem
+                                totalPages={totalPage}
+                                rowsPerPage={rowsPerPage}
+                                handleChangePage={handleChangePageInParent}
+                                handleChangeRowsPerPage={handleChangeRowsPerPageInParent}
+                            />
+                        </div>
+                    )}
         </section>
         ) : (
             <div className="flex flex-col justify-center items-center h-40 my-20">

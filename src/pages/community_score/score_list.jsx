@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useGetCommunityScoreQuery, useGetAttendedRegistrationsQuery } from "@/api/rtkQuery/featureApi/scoreApiSlice";
+import { useGetExternalEventsByStatusQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
 import { format } from 'date-fns';
 
 const CommunityScoreList = () => {
@@ -31,6 +32,11 @@ const CommunityScoreList = () => {
 
     const { data: registrations, isLoading: isLoadingRegistrations } = useGetAttendedRegistrationsQuery(
         selectedStudent ? { semesterId: filters.semesterID, userId: selectedStudent.id } : {},
+        { skip: !selectedStudent }
+    );
+    // Lấy dữ liệu sự kiện ngoài khi đã chọn sinh viên
+    const { data: externalEvents, isLoading: isLoadingExternalEvents } = useGetExternalEventsByStatusQuery(
+        selectedStudent ? { userId: selectedStudent.id, semesterId: filters.semesterID } : {},
         { skip: !selectedStudent }
     );
 
@@ -120,37 +126,69 @@ const CommunityScoreList = () => {
             <Dialog open={selectedStudent !== null} onOpenChange={() => setSelectedStudent(null)}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Thông tin sự kiện</DialogTitle>
+                        <DialogTitle className="text-2xl font-semibold">Thông tin sự kiện</DialogTitle>
                     </DialogHeader>
+                      <h3 className="text-lg font-semibold">Danh sách sự kiện trong trường</h3>
                     {isLoadingRegistrations ? (
                         <p>Đang tải thông tin sự kiện...</p>
                     ) : (
                         registrations && registrations.length > 0 ? (
-                            <Table>
+                            <div className="max-h-[200px] overflow-y-auto">
+                            <Table className="table-fixed w-full">
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Năm học</TableHead>
-                                        <TableHead>Ngày bắt đầu</TableHead>
-                                        <TableHead>Ngày kết thúc</TableHead>
-                                        <TableHead>Điểm</TableHead>
+                                        <TableHead className="w-[12rem] truncate">Tên sự kiện</TableHead>
+                                        <TableHead>Ngày diễn đầu</TableHead>
+                                        {/* <TableHead>Ngày kết thúc</TableHead> */}
+                                        <TableHead>Số điểm</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {registrations.map((registration) => (
                                         <TableRow key={registration.id}>
-                                            <TableCell>{registration.semester?.name}</TableCell>
-                                            <TableCell>{format(new Date(registration.date), 'dd/MM/yyyy HH:mm')}</TableCell>
-                                            <TableCell>{format(new Date(registration.endDate), 'dd/MM/yyyy HH:mm')}</TableCell>
+                                            <TableCell >{registration.name}</TableCell>
+                                            <TableCell  className="whitespace-nowrap">{format(new Date(registration.date), 'dd/MM/yyyy HH:mm')}</TableCell>
+                                            {/* <TableCell>{format(new Date(registration.endDate), 'dd/MM/yyyy HH:mm')}</TableCell> */}
                                             <TableCell>{registration.score}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
+                            </div>
                         ) : (
                             <p>Không có sự kiện nào tham gia.</p>
                         )
                     )}
-                    <Button onClick={() => setSelectedStudent(null)}  className="btn bg-[rgb(10_103_175)] hover:bg-[rgb(8_82_139)] text-white">Đóng</Button>
+                     <h3 className="text-lg font-semibold">Danh sách sự kiện ngoài trường</h3>
+                    {isLoadingExternalEvents ? (
+                        <p>Đang tải thông tin sự kiện ngoài...</p>
+                    ) : (
+                        externalEvents && externalEvents.length > 0 ? (
+                              <div className="max-h-[200px] overflow-y-auto">
+                            <Table className="table-fixed w-full">
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[12rem] truncate">Tên sự kiện</TableHead>
+                                         <TableHead>Ngày diễn ra</TableHead> {/* Sửa lại thành "Ngày diễn ra" thay vì "Ngày bắt đầu" */}
+                                        <TableHead>Số điểm</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {externalEvents.map((event) => (
+                                        <TableRow key={event.id}>
+                                            <TableCell className="truncate overflow-hidden whitespace-nowrap">{event.name}</TableCell>
+                                            <TableCell  className="whitespace-nowrap">{format(new Date(event.date), 'dd/MM/yyyy HH:mm')}</TableCell>{/* Sử dụng event.date thay vì startDate */}
+                                            <TableCell>{event.points}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                            </div>
+                        ) : (
+                            <p>Không có sự kiện ngoài nào tham gia.</p>
+                        )
+                    )}
+                    <Button onClick={() => setSelectedStudent(null)} className="btn bg-[rgb(10_103_175)] hover:bg-[rgb(8_82_139)] text-white">Đóng</Button>
                 </DialogContent>
             </Dialog>
         </>

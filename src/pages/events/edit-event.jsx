@@ -19,59 +19,53 @@ const EditEvent = () => {
     const newOrEditEventRef = useRef(null);
     const [eventPanel, setEventPanel] = useState(null); // mặc định là null
     const [uploadEventImage] = useUploadEventImageMutation();
-
+    const [isImageChanged, setIsImageChanged] = useState(false);    
     const eventID = useSelector((state) => state.events.eventID);
     const { data: event } = useGetEventByIdQuery(eventID);
 
     const handleGetImage = (image) => {
         setEventPanel(image);
+        setIsImageChanged(true); 
     }
 
     const [editEvent, { isLoading }] = useEditEventMutation();
     const handleSubmit = async () => {
-        if (newOrEditEventRef.current) {
-            const eventData = newOrEditEventRef.current.collectAndValidateData();
-            if (eventData) {
-                console.log("Dữ liệu gửi lên server:", eventData);
-            }
+  if (!newOrEditEventRef.current) return;
 
-            if (!eventData) return; 
-    
-            const formData = new FormData();
-            // Nếu ảnh mới được chọn, upload ảnh
-            if (eventPanel) {
-                const imageFormData = new FormData();
-                imageFormData.append("files", eventPanel); // Thêm ảnh vào formData
-                await uploadEventImage({ eventId: eventID, imageData: imageFormData }).unwrap();
-            }
+  const eventData = newOrEditEventRef.current.collectAndValidateData();
+  if (!eventData) return;
 
+  try {
+    // Nếu ảnh đã thay đổi, upload ảnh trước
+    if (isImageChanged && eventPanel) {
+      const imageFormData = new FormData();
+      imageFormData.append("files", eventPanel);
+      await uploadEventImage({ eventId: eventID, imageData: imageFormData }).unwrap();
+    }
 
-            formData.append("files", eventPanel);
-            Object.keys(eventData).forEach(key => {
-                if (eventData[key] !== null) {
-                    formData.append(key, eventData[key]);
-                }
-            });
+    const formData = new FormData();
+    Object.keys(eventData).forEach(key => {
+      if (eventData[key] !== null) {
+        formData.append(key, eventData[key]);
+      }
+    });
 
-            await editEvent({ eventId: eventID, formData: formData })
-                .unwrap()
-                .then((res) => {
-                    toast({
-                        title: "Thành công",
-                        description: res.mess,
-                    });
-                    navigateTo(URLS.MANAGE_EVENTS);
-                })
-                .catch((error) => {
-                    toast({
-                        variant: "destructive",
-                        title: "Uh oh! Có gì đó sai sai.",
-                        description: error.mess,
-                        action: <ToastAction altText="Try again">Thử lại</ToastAction>,
-                    });
-                });
-        }
-    };
+    const res = await editEvent({ eventId: eventID, formData }).unwrap();
+
+    toast({
+      title: "Thành công",
+      description: res.mess,
+    });
+    navigateTo(URLS.MANAGE_EVENTS);
+  } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Uh oh! Có gì đó sai sai.",
+      description: error.mess,
+      action: <ToastAction altText="Try again">Thử lại</ToastAction>,
+    });
+  }
+};
     return ( 
         <>
         <h1 className="text-3xl font-bold text-gray-700">Cập nhật sự kiện</h1>
@@ -97,13 +91,15 @@ const EditEvent = () => {
 )}
 
 
-        {isLoading 
-            ? <Button className='mt-8bg-main-hover float-end' disabled>
-                Đang cập nhật
-                <span className="loading loading-dots loading-md ml-2"></span>
-            </Button>
-            : <Button className="mt-8 bg-main hover:bg-main-hover float-end" onClick={handleSubmit}>Cập nhật sự kiện</Button>
-        }
+       {isLoading 
+    ? <Button className="mt-8 bg-main hover:bg-main-hover float-end" disabled>
+        Đang cập nhật
+        <span className="loading loading-dots loading-md ml-2"></span>
+      </Button>
+    : <Button className="mt-8 bg-main hover:bg-main-hover float-end" onClick={handleSubmit}>
+        Cập nhật sự kiện
+      </Button>
+}
         </>
     );
 }

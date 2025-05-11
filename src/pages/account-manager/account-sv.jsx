@@ -46,7 +46,7 @@ export default function AccountListStudent() {
   const [createStudent, { isLoading: isCreating }] = useRegisterStudentMutation();
   const [deactivateUser] = useDeactivateUserMutation();
   const [openAdd, setOpenAdd] = useState(false);
-  const { data: studentData, isLoading, isError,refetch } = useGetAllStudentsQuery(
+  const { data: studentData, isLoading, isError, refetch } = useGetAllStudentsQuery(
     { page, limit: rowsPerPage },
     { refetchOnMountOrArgChange: true }
   );
@@ -142,16 +142,16 @@ export default function AccountListStudent() {
     setSearchTerm(e.target.value);
   };
   const handleDeactivate = async (id) => {
-    if (confirm("Bạn có chắc muốn vô hiệu hóa tài khoản này?")) {
+
       try {
         await deactivateUser(id).unwrap();
-        alert("Đã vô hiệu hóa tài khoản.");
+      
         refetch();
       } catch (error) {
         console.error("Lỗi:", error);
-        alert("Không thể vô hiệu hóa.");
+       
       }
-    }
+    
   };
   return (
     <div className="mx-auto py-4 px-0">
@@ -224,7 +224,7 @@ export default function AccountListStudent() {
                       </PopoverTrigger>
                       <PopoverContent className="w-40 p-2">
                         <div className="flex flex-col space-y-2">
-                          <Button
+                          {/* <Button
                             variant="ghost"
                             className="justify-start"
                             onClick={() => {
@@ -233,7 +233,7 @@ export default function AccountListStudent() {
                             }}
                           >
                             Chi tiết
-                          </Button>
+                          </Button> */}
                           <Button
                             variant="ghost"
                             className="justify-start"
@@ -243,10 +243,10 @@ export default function AccountListStudent() {
                           </Button>
                           <Button
                             variant="ghost"
-                            className="justify-start text-red-500"
+                            className={`justify-start ${student.active ? "text-red-500" : "text-green-500"}`}
                             onClick={() => handleDeactivate(student.id)}
                           >
-                            Khóa tài khoản
+                            {student.active ? "Khóa tài khoản" : "Mở khóa tài khoản"}
                           </Button>
                         </div>
                       </PopoverContent>
@@ -350,22 +350,22 @@ export default function AccountListStudent() {
       {/* Modal chỉnh sửa */}
       <Dialog open={openEditModal} onOpenChange={setOpenEditModal}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader>
+          {/* <DialogHeader>
             <DialogTitle>Chỉnh sửa thông tin sinh viên</DialogTitle>
-          </DialogHeader>
+          </DialogHeader> */}
           {editingStudent && (
             <EditProfileForm
               initialProfile={editingStudent}
               userId={editingStudent.id} // Hoặc trường định danh duy nhất khác
               onClose={() => setOpenEditModal(false)} // Thêm prop để đóng modal từ form
-              onEditSuccess={refetch} 
-              // Thêm các props khác nếu EditProfileForm cần
+              onEditSuccess={refetch}
+            // Thêm các props khác nếu EditProfileForm cần
             />
           )}
         </DialogContent>
       </Dialog>
 
-     
+
     </div>
   );
 }
