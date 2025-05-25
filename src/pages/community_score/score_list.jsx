@@ -13,19 +13,39 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useGetCommunityScoreQuery, useGetAttendedRegistrationsQuery } from "@/api/rtkQuery/featureApi/scoreApiSlice";
 import { useGetExternalEventsByStatusQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
 import { format } from 'date-fns';
-
+import PaginationItem from "@/components/items/pagination/pagination";
 const CommunityScoreList = () => {
     const [filters, setFilters] = useState({
         departmentID: '',
         courseID: '',
         classID: '',
         semesterID: '',
+        page: 0,   // trang đầu tiên
+        size: 10 
     });
 
     const handleFilterResults = (filters) => {
         setFilters(filters);
     };
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const handleChangePageInParent = (e) => {
+        setPage(e.selected);
+        setFilters((prev) => ({
+            ...prev,
+            page: e.selected,
+        }));
+    };
 
+    const handleChangeRowsPerPageInParent = (newRowsPerPage) => {
+        setRowsPerPage(newRowsPerPage);
+        setPage(0);
+        setFilters((prev) => ({
+            ...prev,
+            size: newRowsPerPage,
+            page: 0,
+        }));
+    };
     const { data: scoreList } = useGetCommunityScoreQuery(filters, { refetchOnMountOrArgChange: true });
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [open, setOpen] = useState(false);
@@ -75,12 +95,12 @@ const CommunityScoreList = () => {
                         <TableHead className="w-[25rem]">Họ và tên</TableHead>
                         <TableHead className="hidden sm:table-cell">Lớp</TableHead>
                         <TableHead className="hidden sm:table-cell">Email</TableHead>
-                        <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
-                        <TableHead className="text-center">Tổng điểm PVCĐ năm học</TableHead>
+                        <TableHead className="hidden sm:table-cell white-space: nowrap">SDT</TableHead>
+                        <TableHead className="text-center whitespace-nowrap">Tổng điểm </TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {scoreList?.map((score, index) => (
+                    {scoreList?.content?.map((score, index) => (
                         <TableRow key={index}>
                             <TableCell className="font-medium text-center hidden sm:table-cell">{score.studentId}</TableCell>
                             <TableCell>{score.studentName}</TableCell>
@@ -122,6 +142,14 @@ const CommunityScoreList = () => {
                     ))}
                 </TableBody>
             </Table>
+              <div className="w-full my-4 px-4 flex justify-end items-center">
+                                        <PaginationItem
+                                          totalPages={scoreList?.totalPages}
+                                          rowsPerPage={rowsPerPage}
+                                          handleChangePage={handleChangePageInParent}
+                                          handleChangeRowsPerPage={handleChangeRowsPerPageInParent}
+                                        />
+                                </div>
 
             <Dialog open={selectedStudent !== null} onOpenChange={() => setSelectedStudent(null)}>
                 <DialogContent>
@@ -183,7 +211,9 @@ const CommunityScoreList = () => {
                                     ))}
                                 </TableBody>
                             </Table>
+                            
                             </div>
+                            
                         ) : (
                             <p>Không có sự kiện ngoài nào tham gia.</p>
                         )

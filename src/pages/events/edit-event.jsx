@@ -53,6 +53,7 @@ const EditEvent = () => {
     const res = await editEvent({ eventId: eventID, formData }).unwrap();
 
     toast({
+       variant: "success",
       title: "Thành công",
       description: res.mess,
     });

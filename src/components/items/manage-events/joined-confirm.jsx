@@ -37,6 +37,7 @@ const JoinedConfirmItem = ({ studentIds }) => {
                 .unwrap()
                 .then(() => {
                     toast({
+                         variant: "success",
                         title: "Thành công",
                         description: "Đã xác nhận tham gia cho những sinh viên được chọn.",
                     });
@@ -58,6 +59,7 @@ const JoinedConfirmItem = ({ studentIds }) => {
                 .unwrap()
                 .then(() => {
                     toast({
+                         variant: "success",
                         title: "Thành công",
                         description: "Đã xác nhận tham gia cho những sinh viên được chọn.",
                     });

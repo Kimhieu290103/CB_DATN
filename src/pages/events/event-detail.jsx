@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { eventStatus, formatDateTime } from "@/lib/utils";
 
 import { useGetEventByIdQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
+import EventImage from "../../assets/eventImage.jpg";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -64,7 +65,7 @@ const EventDetail = () => {
                 className="w-full md:w-3/5 h-full object-cover rounded-lg"
             /> */}
                 <img
-                    src={event?.eventImage?.[0]?.imageUrl || "/default-event-image.jpg"}
+                    src={event?.eventImage?.[0]?.imageUrl || EventImage}
                     alt="event-img"
                     className="w-full md:w-3/5 h-full object-cover rounded-lg"
                 />

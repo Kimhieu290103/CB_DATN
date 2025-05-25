@@ -11,7 +11,7 @@ import CriteriaCheckboxItem from "@/components/items/checkbox/criteria-checkbox"
 
 import URLS from "@/routes/urls";
 
-import { useGetFalcutyCriteriaInSemesterQuery, useGetFalcutyCriteriaQuery, useGetSchoolCriteriaInSemesterQuery, useGetSchoolCriteriaQuery } from "@/api/rtkQuery/featureApi/criteriaApiSlice";
+import { useGetFalcutyCriteriaInSemesterQuery,  useGetSchoolCriteriaInSemesterQuery } from "@/api/rtkQuery/featureApi/criteriaApiSlice";
 import { useGetAcademicYearsQuery, useGetEventByIdQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
 import { skipToken } from '@reduxjs/toolkit/query/react';
 

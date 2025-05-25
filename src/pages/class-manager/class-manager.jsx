@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
-  useGetAllClassesQuery,
   useGetClassesMutation,
   useCreateClassMutation,
   useGetDepartmentQuery,
@@ -185,7 +184,7 @@ export default function ListClass() {
       console.error("Lỗi khi tạo lớp học:", error);
       toast({
         title: "Lỗi",
-        description: "Không thể tạo lớp học. Vui lòng thử lại.",
+        description: "Tên lớp đã tồn tại. Vui lòng thử lại.",
         variant: "destructive",
         action: <ToastAction altText="Thử lại">Thử lại</ToastAction>,
       });
@@ -230,7 +229,7 @@ export default function ListClass() {
       console.error("Lỗi khi cập nhật lớp học:", error);
       toast({
         title: "Lỗi",
-        description: "Không thể cập nhật lớp học. Vui lòng thử lại.",
+        description: "Tên lớp đã tồn tại. Vui lòng thử lại.",
         variant: "destructive",
         action: <ToastAction altText="Thử lại">Thử lại</ToastAction>,
       });

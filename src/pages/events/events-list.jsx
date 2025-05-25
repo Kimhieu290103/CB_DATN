@@ -90,6 +90,7 @@ const EventsList = () => {
             .unwrap()
             .then((res) => {
                 toast({
+                    variant: "success",
                     title: "Thành công",
                     description: res.mess,
                 });

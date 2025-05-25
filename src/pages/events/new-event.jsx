@@ -45,6 +45,7 @@ const NewEvent = () => {
                 .then((res) => {
                     console.log(res);
                     toast({
+                        variant: "success",
                         title: "Thành công",
                         description: res.mess,
                     });

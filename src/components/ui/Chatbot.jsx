@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment} from '@fortawesome/free-solid-svg-icons'
+import { faComment } from '@fortawesome/free-solid-svg-icons'
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -57,8 +57,8 @@ const Chatbot = () => {
         style={styles.chatButton}
         onClick={() => setIsOpen(!isOpen)}
       >
-         <FontAwesomeIcon icon={faComment}  />
-          
+        <FontAwesomeIcon icon={faComment} />
+
       </button>
 
       {isOpen && (
@@ -77,7 +77,9 @@ const Chatbot = () => {
                     : '15px 15px 15px 0',
                 }}
               >
-                  <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content
+                  .replace(/\\n/g, '\n')
+                  .replace(/\\\n/g, '\n')} </div>
               </div>
             ))}
             <div ref={messagesEndRef} />

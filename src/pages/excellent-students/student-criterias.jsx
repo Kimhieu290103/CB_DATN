@@ -14,10 +14,11 @@ import { Input } from "@/components/ui/input";
 import StudentCriteriasCard from "@/components/cards/excellent-students/student-criterias";
 import { Separator } from "@/components/ui/separator";
 import { useGetAcademicYearsQuery } from "@/api/rtkQuery/featureApi/eventApiSlice";
+import { useSelector } from 'react-redux';
 // Tách component ra ngoài
 const AcademicYearSelector = ({ selectedYear, setSelectedYear }) => {
     const { data: academicYears, isLoading, error } = useGetAcademicYearsQuery();
-
+   
     return (
         <div className="mb-6">
             <label className="font-bold mr-2">Chọn năm học:</label>
@@ -46,7 +47,7 @@ const AcademicYearSelector = ({ selectedYear, setSelectedYear }) => {
 const StudentCriterias = () => {
     // const { data: falcutyCriteria } = useGetFalcutyCriteriaQuery();
     // const { data: schoolCriteria } = useGetSchoolCriteriaQuery();
-
+    const userRole = useSelector(state => state.auth.login.role);
     const [dialogType, setDialogType] = useState(null); // 'school' hoặc 'falcuty'
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -107,11 +108,12 @@ const StudentCriterias = () => {
                         key={criteria.id}
                         criteria={criteria}
                         type="school"
+                        userRole={userRole}
                     />
                 ))}
             </div>
             {/* Nút thêm tiêu chí cho cấp trường */}
-            {selectedYear && (
+            {selectedYear && userRole === "HSV" && (
                 <div className="flex justify-end mt-4">
                     <Button onClick={() => setDialogType("school")} className="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600">
                         + Thêm tiêu chí
@@ -150,10 +152,11 @@ const StudentCriterias = () => {
                         key={criteria.id}
                         criteria={criteria}
                         type="falcuty"
+                        userRole={userRole}
                     />
                 ))}
             </div>
-            {selectedYear && (
+            {selectedYear&& userRole === "BTV" && (
                 <div className="flex justify-end mt-4">
                     <Button onClick={() => setDialogType("falcuty")} className="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600">
                         + Thêm tiêu chí

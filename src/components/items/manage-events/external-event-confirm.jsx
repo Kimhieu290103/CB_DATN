@@ -24,6 +24,7 @@ const ExternalEventConfirmItem = ({ event }) => {
             .unwrap()
             .then(() => {
                 toast({
+                     variant: "success",
                     title: "Thành công",
                     description: "Đã xác nhận hoạt động",
                 });
@@ -44,6 +45,7 @@ const ExternalEventConfirmItem = ({ event }) => {
             .unwrap()
             .then(() => {
                 toast({
+                     variant: "success",
                     title: "Thành công",
                     description: "Đã xác nhận hoạt động",
                 });

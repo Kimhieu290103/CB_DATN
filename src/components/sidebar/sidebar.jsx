@@ -41,21 +41,22 @@ const SideBar = () => {
                         </SideBarItem>
                 {userRole !== 'LCD' && (
                     <div>
-                  
+                   {(userRole === 'HSV') && (
                         <SideBarItem navigateTo={URLS.EXTERNAL_ACTIVITIES}>
                             <div className="flex items-center">
                                 <span className="material-symbols-outlined mr-1">public</span>
                                 <span className='text-lg'>Hoạt động khác</span>
                             </div>
                         </SideBarItem>
-
-                        <SideBarItem navigateTo={URLS.COMMUNITY_SCORE}>
-                            <div className="flex items-center">
-                                <span className="material-symbols-outlined mr-1">assignment_turned_in</span>
-                                <span className='text-lg'>Quản lý điểm PVCĐ</span>
-                            </div>
-                        </SideBarItem>
-                        
+                            )}
+                        {(userRole === 'CTSV') && (
+                            <SideBarItem navigateTo={URLS.COMMUNITY_SCORE}>
+                                <div className="flex items-center">
+                                    <span className="material-symbols-outlined mr-1">assignment_turned_in</span>
+                                    <span className='text-lg'>Quản lý điểm PVCĐ</span>
+                                </div>
+                            </SideBarItem>
+                        )}
                         <SideBarItem navigateTo={URLS.EXCELLENT_STUDENTS}>
                             <div className="flex items-center">
                                 <span className="material-symbols-outlined mr-1">social_leaderboard</span>
@@ -63,7 +64,7 @@ const SideBar = () => {
                             </div>
                         </SideBarItem>
                               
-                        <SideBarItem navigateTo={URLS.ACCOUNT_MANAGEMENT}>
+                        {/* <SideBarItem navigateTo={URLS.ACCOUNT_MANAGEMENT}>
                             <div className="flex items-center">
                                 <span className="material-symbols-outlined mr-1">manage_accounts</span>
                                 <span className='text-lg'>Quản lí tài khoản</span>
@@ -74,7 +75,24 @@ const SideBar = () => {
                                 <span className="material-symbols-outlined mr-1">school</span>
                                 <span className='text-lg'>Quản lí lớp học</span>
                             </div>
-                        </SideBarItem>
+                        </SideBarItem> */}
+                        {(userRole === 'BTV') && (
+                            <SideBarItem navigateTo={URLS.ACCOUNT_MANAGEMENT}>
+                                <div className="flex items-center">
+                                    <span className="material-symbols-outlined mr-1">manage_accounts</span>
+                                  <span className='text-lg'>Quản lí tài khoản</span>
+                                </div>
+                            </SideBarItem>
+                        )}
+
+                        {(userRole === 'BTV') && (
+                            <SideBarItem navigateTo={URLS.CLASS_MANAGEMENT}>
+                                <div className="flex items-center">
+                                    <span className="material-symbols-outlined mr-1">school</span>
+                                    <span className='text-lg'>Quản lí lớp học</span>
+                                </div>
+                            </SideBarItem>
+                        )}
                     </div>
                 )}
 

@@ -4,14 +4,6 @@ import UserInfoDialog from "@/components/ui/profile";
 import ChangePasswordDialog from  "@/components/ui/change-pass";
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
     Popover,
     PopoverContent,
     PopoverTrigger,

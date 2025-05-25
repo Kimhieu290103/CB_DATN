@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/card"
 import { format } from "date-fns";
 import PropTypes from 'prop-types';
+import { useToast } from "@/components/ui/use-toast";
 
-
-const StudentCriteriasCard = ({ criteria, type}) => {
+const StudentCriteriasCard = ({ criteria, type, userRole }) => {
     const [removeSchoolCriteria, { isLoading: isRemovingSchool }] = useRemoveSchoolCriteriaMutation();
     const [removeFalcutyCriteria, { isLoading: isRemovingFalcuty }] = useRemoveFalcutyCriteriaMutation();
     const [errorMessage, setErrorMessage] = useState("");
@@ -30,16 +30,16 @@ const StudentCriteriasCard = ({ criteria, type}) => {
 
             if (error?.status === 403) {
                 setErrorMessage("Bạn không có quyền thực hiện thao tác này.");
-               
+
             } else {
                 setErrorMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
-              
+
             }
         }
     };
-    const [updateSchoolCriteria, { isLoading: isUpdatingSchool }] = useUpdateSchoolCriteriaMutation();
-    const [updateFalcutyCriteria, { isLoading: isUpdatingFalcuty }] = useUpdateFalcutyCriteriaMutation();
-    
+    const [updateSchoolCriteria] = useUpdateSchoolCriteriaMutation();
+    const [updateFalcutyCriteria] = useUpdateFalcutyCriteriaMutation();
+    const { toast } = useToast();
     // 🔧 Added: state cho sửa tiêu chí
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(criteria.name);
@@ -63,16 +63,25 @@ const StudentCriteriasCard = ({ criteria, type}) => {
                     }
                 }).unwrap();
             }
-    
+
             setIsEditing(false); // Sau khi cập nhật thành công thì đóng form
-            alert("Cập nhật thành công!");
-    
+            toast({
+                title: "Thành công!",
+                description: "cập nhật thành công!", // Sử dụng mess từ API nếu có
+                variant: "success",
+                duration: 2000,
+            });
+
         } catch (error) {
             console.error("Lỗi cập nhật:", error);
-            alert("Đã xảy ra lỗi khi cập nhật.");
+            toast({
+                variant: "destructive",
+                title: "Lỗi!",
+                description: "Vui lòng kiểm tra lại các trường.",
+            });
         }
     };
-    
+
     return (
         <Card className="w-[23rem] flex flex-col justify-between">
             <CardHeader>
@@ -119,42 +128,43 @@ const StudentCriteriasCard = ({ criteria, type}) => {
                     <p className="text-red-600 text-sm">{errorMessage}</p>
                 )}
             </CardContent>
-            <CardFooter className="self-end justify-self-end gap-2">
-                {isEditing ? (
-                    // 🔧 Added: Button khi đang sửa
-                    <>
-                        <Button
-                            className="bg-blue-600 hover:bg-blue-500 text-white"
-                            onClick={handleSaveEdit}
-                        >
-                            Lưu
-                        </Button>
-                        <Button
-                            className="bg-gray-400 hover:bg-gray-300 text-white"
-                            onClick={() => setIsEditing(false)}
-                        >
-                            Hủy
-                        </Button>
-                    </>
-                ) : (
-                    // 🔧 Modified: Button sửa ban đầu
-                    <>
-                        <Button
-                            className="bg-green-600 hover:bg-green-500 text-white"
-                            onClick={() => setIsEditing(true)}
-                        >
-                            Sửa tiêu chí
-                        </Button>
-                        <Button
-                            className="w-full bg-red-600 hover:bg-red-500 text-white"
-                            onClick={handleRemoveCriteria}
-                            disabled={isRemovingSchool || isRemovingFalcuty}
-                        >
-                            {isRemovingSchool || isRemovingFalcuty ? "Đang xóa..." : "Xóa tiêu chí"}
-                        </Button>
-                    </>
-                )}
-            </CardFooter>
+            {((type === "school" && userRole === "HSV") || (type === "falcuty" && userRole === "BTV")) &&
+                <CardFooter className="self-end justify-self-end gap-2">
+                    {isEditing ? (
+                        // 🔧 Added: Button khi đang sửa
+                        <>
+                            <Button
+                                className="bg-blue-600 hover:bg-blue-500 text-white"
+                                onClick={handleSaveEdit}
+                            >
+                                Lưu
+                            </Button>
+                            <Button
+                                className="bg-gray-400 hover:bg-gray-300 text-white"
+                                onClick={() => setIsEditing(false)}
+                            >
+                                Hủy
+                            </Button>
+                        </>
+                    ) : (
+                        // 🔧 Modified: Button sửa ban đầu
+                        <>
+                            <Button
+                                className="bg-green-600 hover:bg-green-500 text-white"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Sửa tiêu chí
+                            </Button>
+                            <Button
+                                className="w-full bg-red-600 hover:bg-red-500 text-white"
+                                onClick={handleRemoveCriteria}
+                                disabled={isRemovingSchool || isRemovingFalcuty}
+                            >
+                                {isRemovingSchool || isRemovingFalcuty ? "Đang xóa..." : "Xóa tiêu chí"}
+                            </Button>
+                        </>
+                    )}
+                </CardFooter>}
         </Card>
     );
 };
@@ -170,6 +180,7 @@ StudentCriteriasCard.propTypes = {
         createdAt: PropTypes.string.isRequired,
     }).isRequired,
     type: PropTypes.oneOf(["school", "falcuty"]).isRequired,
+    userRole: PropTypes.string.isRequired,
 };
 
 export default StudentCriteriasCard;

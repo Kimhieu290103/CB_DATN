@@ -99,7 +99,7 @@ export default function AccountListStudent() {
 
                             <ScoreListFilterItem onFilterResults={handleFilterResults} />
                         </div>
-                        <Button class="btn bg-main hover:bg-main-hover text-white" onClick={() => setOpenAdd(true)}>+ Thêm tài khoản</Button>
+                        {/* <Button class="btn bg-main hover:bg-main-hover text-white" onClick={() => setOpenAdd(true)}>+ Thêm tài khoản</Button> */}
                     </div>
                     <Table>
                         <TableHeader>
