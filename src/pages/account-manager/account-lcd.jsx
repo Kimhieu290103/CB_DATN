@@ -249,7 +249,7 @@ export default function AccountListLcd() {
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button onClick={handleSubmit}>Lưu</Button>
+              <Button className="btn bg-main hover:bg-main-hover text-white" onClick={handleSubmit}>Lưu</Button>
             </div>
           </div>
         </DialogContent>

@@ -68,7 +68,7 @@ const ExcellentStudentsList = () => {
                 <TableHeader>
                     <TableRow>
                         <TableHead className="hidden sm:table-cell">MSSV</TableHead>
-                        <TableHead className="w-[25rem]">Họ và tên</TableHead>
+                        <TableHead className="hidden sm:table-cell">Họ và tên</TableHead>
                         <TableHead className="hidden sm:table-cell">Lớp</TableHead>
                         <TableHead className="hidden sm:table-cell">Email</TableHead>
                         <TableHead className="hidden sm:table-cell">Số điện thoại</TableHead>
@@ -88,12 +88,12 @@ const ExcellentStudentsList = () => {
                     ) : (
                         excellentStudents?.map((student, index) => (
                             <TableRow key={index}>
-                                <TableCell className="font-medium text-center hidden sm:table-cell">{student.studentId}</TableCell>
+                                <TableCell className="font-medium  hidden sm:table-cell">{student.studentId}</TableCell>
                                 <TableCell>{student.fullname}</TableCell>
                                 <TableCell className="hidden sm:table-cell">{student.clazz.name}</TableCell>
                                 <TableCell className="hidden sm:table-cell">{student.email}</TableCell>
                                 <TableCell className="hidden sm:table-cell">{student.phoneNumber}</TableCell>
-                                <TableCell className="text-center font-medium">{student.dateOfBirth}</TableCell>
+                                <TableCell className="text-center ">{student.dateOfBirth}</TableCell>
                                 <TableCell className="text-center">
                                     <Button
                                         variant="ghost"
@@ -133,14 +133,14 @@ const ExcellentStudentsList = () => {
                     {selectedStudent && (
                         <div className="space-y-4">
                             <p><strong>MSSV:</strong> {selectedStudent.studentId}</p>
-                            <p><strong>Họ và tên:</strong> {selectedStudent.studentName}</p>
-                            <p><strong>Lớp:</strong> {selectedStudent.className}</p>
+                            <p><strong>Họ và tên:</strong> {selectedStudent.fullname}</p>
+                            <p><strong>Lớp:</strong> {selectedStudent.clazz.name}</p>
                             <p><strong>Email:</strong> {selectedStudent.email}</p>
                             <p><strong>Số điện thoại:</strong> {selectedStudent.phoneNumber}</p>
-                            <p><strong>Tổng điểm PVCĐ:</strong> {selectedStudent.totalPoints}</p>
+                            {/* <p><strong>Tổng điểm PVCĐ:</strong> {selectedStudent.totalPoints}</p> */}
                         </div>
                     )}
-                    <Button onClick={() => setOpen(false)} className="mt-4 w-full">Đóng</Button>
+                    <Button onClick={() => setOpen(false)} className="mt-4 w-full btn bg-main hover:bg-main-hover text-white">Đóng</Button>
                 </DialogContent>
             </Dialog>
         </>

@@ -18,7 +18,7 @@ const EditEvent = () => {
     const navigateTo = useNavigate();
     const newOrEditEventRef = useRef(null);
     const [eventPanel, setEventPanel] = useState(null); // mặc định là null
-    const [uploadEventImage] = useUploadEventImageMutation();
+    const [uploadEventImage, { isLoading: isUploadingImage }] = useUploadEventImageMutation();
     const [isImageChanged, setIsImageChanged] = useState(false);    
     const eventID = useSelector((state) => state.events.eventID);
     const { data: event } = useGetEventByIdQuery(eventID);
@@ -28,7 +28,7 @@ const EditEvent = () => {
         setIsImageChanged(true); 
     }
 
-    const [editEvent, { isLoading }] = useEditEventMutation();
+    const [editEvent, { isLoading: isEditingEvent }] = useEditEventMutation();
     const handleSubmit = async () => {
   if (!newOrEditEventRef.current) return;
 
@@ -92,7 +92,7 @@ const EditEvent = () => {
 )}
 
 
-       {isLoading 
+       {isUploadingImage || isEditingEvent
     ? <Button className="mt-8 bg-main hover:bg-main-hover float-end" disabled>
         Đang cập nhật
         <span className="loading loading-dots loading-md ml-2"></span>

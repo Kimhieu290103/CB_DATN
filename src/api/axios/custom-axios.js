@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8081'
+    baseURL: 'https://datn-backend-yr7b.onrender.com'
     // baseURL: 'http://192.168.168.78:8000/api'
 });
 

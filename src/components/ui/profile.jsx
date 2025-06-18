@@ -43,7 +43,7 @@ const UserInfoDialog = ({ open, onOpenChange, previousFocus }) => {
                     <div>{data?.address || '—'}</div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleClose}>Đóng</Button>
+                    <Button className="btn bg-main hover:bg-main-hover text-white" onClick={handleClose}>Đóng</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

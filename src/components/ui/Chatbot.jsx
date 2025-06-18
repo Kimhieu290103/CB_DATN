@@ -16,6 +16,40 @@ const Chatbot = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
+const handleOutput = (output) => {
+  try {
+    const jsonStart = output.indexOf('{');
+    const jsonEnd = output.lastIndexOf('}');
+
+    if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+      const jsonString = output.substring(jsonStart, jsonEnd + 1);
+      const parsed = JSON.parse(jsonString);
+
+      if (parsed.description) {
+        // Lấy phần text trước đoạn JSON (ví dụ: "Nội dung chi tiết:\n")
+        const beforeJson = output.substring(0, jsonStart);
+
+        // Lấy phần text sau đoạn JSON (ví dụ: "Nếu bạn đồng ý ...")
+        const afterJson = output.substring(jsonEnd + 1);
+
+        // Kết hợp lại: phần trước + description + phần sau
+        const finalOutput = beforeJson.trim() + '\n' + parsed.description.trim() + '\n' + afterJson.trim();
+
+        appendMessage(finalOutput, 'bot');
+        return;
+      }
+    }
+    
+    // Nếu không parse được JSON, hiển thị nguyên bản
+    appendMessage(output, 'bot');
+
+  } catch (e) {
+    console.error('Lỗi xử lý JSON:', e);
+    appendMessage(output, 'bot');
+  }
+};
+
+
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -28,7 +62,7 @@ const Chatbot = () => {
     setInput('');
 
     try {
-      const response = await fetch('http://localhost:5678/webhook/9abad9d4-2660-4564-878e-ad9d0ea61cde', {
+      const response = await fetch('https://trankimhieu1001.app.n8n.cloud/webhook/9abad9d4-2660-4564-878e-ad9d0ea61cde', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,9 +74,9 @@ const Chatbot = () => {
 
       const data = await response.json();
       if (Array.isArray(data)) {
-        data.forEach(d => appendMessage(d.output, 'bot'));
+        data.forEach(d => handleOutput(d.output, 'bot'));
       } else {
-        appendMessage(data.output || 'Không có phản hồi', 'bot');
+        handleOutput(data.output || 'Không có phản hồi', 'bot');
       }
     } catch (err) {
       console.error(err);

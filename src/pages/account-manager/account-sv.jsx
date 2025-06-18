@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ScoreListFilterItem from "@/components/items/community-score/score-list-filter";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useToast } from '@/components/ui/use-toast';
 import {
   Table,
   TableBody,
@@ -23,6 +24,7 @@ import {
 import PaginationItem from "@/components/items/pagination/pagination";
 
 export default function AccountListStudent() {
+  const { toast } = useToast();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -90,7 +92,12 @@ export default function AccountListStudent() {
 
     try {
       await createStudent(formData).unwrap();
-      alert("Tạo tài khoản thành công!");
+      toast({
+        title: "Thành công!",
+        description: "cập nhật thành công!", // Sử dụng mess từ API nếu có
+        variant: "success",
+        duration: 2000,
+      });
       setFormData({
         fullname: '',
         phone_number: '',
@@ -107,7 +114,11 @@ export default function AccountListStudent() {
       setOpenAdd(false);
     } catch (error) {
       console.error("Lỗi tạo tài khoản:", error);
-      alert("Đã xảy ra lỗi khi tạo tài khoản.");
+      toast({
+        variant: "destructive",
+        title: "Lỗi!",
+        description: "Vui lòng kiểm tra lại các trường.",
+      });
     }
   };
 
@@ -123,12 +134,21 @@ export default function AccountListStudent() {
 
     try {
       await bulkRegisterStudents(formData).unwrap();
-      alert("Đăng ký sinh viên hàng loạt thành công!");
+      toast({
+        title: "Thành công!",
+        description: "đăng kí sinh viênviên thành công!", // Sử dụng mess từ API nếu có
+        variant: "success",
+        duration: 2000,
+      });
       setExcelFile(null);
       setOpenAdd(false);
     } catch (error) {
       console.error("Lỗi khi upload file Excel:", error);
-      alert("Đã xảy ra lỗi khi upload file Excel.");
+      toast({
+        variant: "destructive",
+        title: "Lỗi!",
+        description: "Vui lòng kiểm tra lại các trường.",
+      });
     }
   };
   // Trong component
@@ -143,15 +163,15 @@ export default function AccountListStudent() {
   };
   const handleDeactivate = async (id) => {
 
-      try {
-        await deactivateUser(id).unwrap();
-      
-        refetch();
-      } catch (error) {
-        console.error("Lỗi:", error);
-       
-      }
-    
+    try {
+      await deactivateUser(id).unwrap();
+
+      refetch();
+    } catch (error) {
+      console.error("Lỗi:", error);
+
+    }
+
   };
   return (
     <div className="mx-auto py-4 px-0">
@@ -299,7 +319,7 @@ export default function AccountListStudent() {
               <input name="email" onChange={handleChange} value={formData.email} placeholder="Email" className="input input-bordered" />
               <input name="address" onChange={handleChange} value={formData.address} placeholder="Địa chỉ" className="input input-bordered" />
               <input type="date" name="date_of_birth" onChange={handleChange} value={formData.date_of_birth} className="input input-bordered" />
-              <input name="username" onChange={handleChange} value={formData.username} placeholder="Tên đăng nhập" className="input input-bordered" />
+              {/* <input name="username" onChange={handleChange} value={formData.username} placeholder="Tên đăng nhập" className="input input-bordered" /> */}
               <input type="password" name="password" onChange={handleChange} value={formData.password} placeholder="Mật khẩu" className="input input-bordered" />
               <input type="password" name="retype_password" onChange={handleChange} value={formData.retype_password} placeholder="Nhập lại mật khẩu" className="input input-bordered" />
               <select
