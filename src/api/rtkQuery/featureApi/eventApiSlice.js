@@ -112,6 +112,22 @@ export const eventApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['EventRegistration'],
         }),
+        removeStudentFromEvent: builder.mutation({
+            query: ({ studentId, eventId }) => ({
+                url: `/api/v1/registrations/${eventId}/student/${studentId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['EventRegistration'],
+        }),
+
+        cancelAttendance: builder.mutation({
+            query: ({ studentId, eventId }) => ({
+                url: `/api/v1/points/attendance/${studentId}/${eventId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['EventRegistration'],
+        }),
+
         // --------------------------------------------
 
         // ----------------------------- tìm event -----------------------------
@@ -154,5 +170,7 @@ export const { useCreateEventMutation,
                 useUploadEventImageMutation, 
                 useGetEventsByNameQuery,
                 useGetMyEventsByNameQuery,
-                 useGetExternalEventsByStatusQuery,
+                useGetExternalEventsByStatusQuery,
+                useRemoveStudentFromEventMutation,
+                useCancelAttendanceMutation,
             } = eventApiSlice;

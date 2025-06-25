@@ -40,7 +40,7 @@ const JoinedConfirmForEachStudentItem = ({ student }) => {
     return ( 
         <Dialog>
             <DialogTrigger asChild>
-                <span className="material-symbols-outlined cursor-pointer text-3xl">more_horiz</span>
+                <span className=" text-sm font-semibold text-green-600 cursor-pointer">Điểm danh</span>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

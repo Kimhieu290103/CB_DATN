@@ -215,7 +215,30 @@ const NewOrEditEvent = forwardRef(({ onHandleEventInParent }, ref) => {
                     ))}
                 </select>
             </label>
-    
+     <section className="flex flex-wrap md:flex-nowrap w-full max-w-3xl items-center gap-3">
+                <label className="form-control w-full max-w-sm">
+                    <div className="label">
+                        <span className="label-text">Thời gian bắt đầu đăng ký</span>
+                    </div>
+                    <input 
+                        type="datetime-local" 
+                        className="input input-bordered w-full max-w-sm rounded-md bg-white" 
+                        value={startRegTime}
+                        onChange={(e) => setStartRegTime(e.target.value)}
+                    />
+                </label>
+                <label className="form-control w-full max-w-sm">
+                    <div className="label">
+                        <span className="label-text">Thời gian kết thúc đăng ký</span>
+                    </div>
+                    <input 
+                        type="datetime-local" 
+                        className="input input-bordered w-full max-w-sm rounded-md bg-white" 
+                        value={endRegTime}
+                        onChange={(e) => setEndRegTime(e.target.value)}
+                    />                
+                </label>
+            </section>
             <section className="flex flex-wrap md:flex-nowrap w-full max-w-3xl items-center gap-3">
                 <label className="form-control w-full max-w-sm">
                     <div className="label">
@@ -241,30 +264,7 @@ const NewOrEditEvent = forwardRef(({ onHandleEventInParent }, ref) => {
                 </label>
             </section>
     
-            <section className="flex flex-wrap md:flex-nowrap w-full max-w-3xl items-center gap-3">
-                <label className="form-control w-full max-w-sm">
-                    <div className="label">
-                        <span className="label-text">Thời gian bắt đầu đăng ký</span>
-                    </div>
-                    <input 
-                        type="datetime-local" 
-                        className="input input-bordered w-full max-w-sm rounded-md bg-white" 
-                        value={startRegTime}
-                        onChange={(e) => setStartRegTime(e.target.value)}
-                    />
-                </label>
-                <label className="form-control w-full max-w-sm">
-                    <div className="label">
-                        <span className="label-text">Thời gian kết thúc đăng ký</span>
-                    </div>
-                    <input 
-                        type="datetime-local" 
-                        className="input input-bordered w-full max-w-sm rounded-md bg-white" 
-                        value={endRegTime}
-                        onChange={(e) => setEndRegTime(e.target.value)}
-                    />                
-                </label>
-            </section>
+           
 
             <label className="form-control w-full max-w-3xl">
                 <div className="label">
@@ -318,6 +318,7 @@ const NewOrEditEvent = forwardRef(({ onHandleEventInParent }, ref) => {
                     <span className="label-text">Điểm phục vụ cộng đồng</span>
                 </div>
                 <input 
+                 placeholder="Điếm số"
                     type="text" 
                     className="input input-bordered rounded-md bg-white" 
                     value={eventServePoint}
@@ -325,31 +326,21 @@ const NewOrEditEvent = forwardRef(({ onHandleEventInParent }, ref) => {
                 />
             </label>
 
-            <section className="flex flex-wrap justify-between items-center max-w-lg">
-                <div className="form-control w-fit my-4">
-                    <label className="label cursor-pointer !bg-white">
-                        <input 
-                            type="checkbox" 
-                            className="toggle toggle-info bg-gray-200 " 
-                            checked={isLimitParticipants} 
-                            onChange={(e) => setIsLimitParticipants(e.target.checked)} 
-                        />
-                        <span className="label-text ml-2">Giới hạn số lượng tham gia</span>
-                    </label>
+           
+                
+           
+            <label className="form-control w-4/12">
+                <div className="label">
+                    <span className="label-text">Giới hạn số lượng tham gia</span>
                 </div>
-    
-                {isLimitParticipants && (
-                    <label className="form-control max-w-xs bg-white">
-                        <input 
-                            type="text" 
+                <input 
+                    type="text" 
                             placeholder="Số lượng"
                             className="input input-bordered max-w-xs rounded-md bg-white" 
                             value={participantLimit}
                             onChange={(e) => setParticipantLimit(e.target.value)}
-                        />
-                    </label>
-                )}
-            </section>
+                />
+            </label>
         </article>
 
         <Separator className="my-10" />
