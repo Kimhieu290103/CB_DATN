@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setCredentials, logout ,setErrorMessage  } from '@/redux/reducer/auth.reducer';
 
 const baseQuery = fetchBaseQuery({ 
-    baseUrl: 'http://localhost:8080',
+    baseUrl: 'https://datn-backend-yr7b.onrender.com',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.login.token;
         if (token) {
