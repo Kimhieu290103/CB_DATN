@@ -62,7 +62,7 @@ const handleOutput = (output) => {
     setInput('');
 
     try {
-      const response = await fetch('http://localhost:5678/webhook/9abad9d4-2660-4564-878e-ad9d0ea61cde', {
+      const response = await fetch('https://trankimhieu1001.app.n8n.cloud/webhook/9abad9d4-2660-4564-878e-ad9d0ea61cde', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
